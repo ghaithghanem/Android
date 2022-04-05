@@ -1,13 +1,16 @@
 package com.amier.Activities.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amier.Activities.api.Api
+import com.amier.Activities.api.ApiArticle
 import com.amier.Activities.models.Articles
 import com.amier.Activities.models.ArticlesReponse
 import com.amier.modernloginregister.R
@@ -17,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
 
 
     override fun onCreateView(
@@ -30,7 +33,14 @@ class SearchFragment : Fragment() {
         view.recyclerView.layoutManager = LinearLayoutManager(activity)
         view.recyclerView.setHasFixedSize(true)
         getNewsData { newss : List<Articles> ->
-            view.recyclerView.adapter = ArticleViewAdapter(newss)
+            view.recyclerView.adapter = ArticleViewAdapter(newss,this)
+        }
+
+        val ajouterArticleButton = view.findViewById<Button>(R.id.ajouterArticle)
+
+        ajouterArticleButton.setOnClickListener {
+            val intent = Intent(activity, AjouterArticle::class.java)
+            startActivity(intent)
         }
 
 
@@ -38,7 +48,8 @@ class SearchFragment : Fragment() {
         return view
     }
     private fun getNewsData(callback: (List<Articles>) -> Unit) {
-        val apiInterface = Api.create()
+        val apiInterface = ApiArticle.create()
+
         apiInterface.GetAllArticles().enqueue(object: Callback<ArticlesReponse> {
             override fun onResponse(call: Call<ArticlesReponse>, response: Response<ArticlesReponse>) {
                 if(response.isSuccessful){
@@ -55,6 +66,24 @@ class SearchFragment : Fragment() {
             }
 
         })
+    }
+
+    override fun onItemClick(position: Int, articles: List<Articles>) {
+        val intent = Intent(activity, DetailArticle::class.java)
+        intent.putExtra("nom",articles[position].nom)
+        intent.putExtra("addresse",articles[position].addresse)
+        intent.putExtra("_id",articles[position]._id)
+        intent.putExtra("description",articles[position].description)
+        intent.putExtra("type",articles[position].type)
+        intent.putExtra("photo",articles[position].photo)
+            intent.putExtra("userArticleNom", articles[position].user?.nom)
+            intent.putExtra("userArticlePrenom", articles[position].user?.prenom)
+            intent.putExtra("userArticlePhoto", articles[position].user?.photoProfil)
+            intent.putExtra("userArticleEmail", articles[position].user?.email)
+            intent.putExtra("userDetail", articles[position].user?._id)
+        intent.putExtra("question", articles[position].question?._id)
+        intent.putExtra("questionTitle", articles[position].question?.titre)
+        startActivity(intent)
     }
 
 }

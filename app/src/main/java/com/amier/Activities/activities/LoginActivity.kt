@@ -23,11 +23,11 @@ class LoginActivity : AppCompatActivity() {
     var loadingDialog = LoadingDialog()
     override fun onCreate(savedInstanceState: Bundle?) {
         mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
-//        if(mSharedPref.getString("email","")!!.isNotEmpty()){
-//            finish()
-//            val intent = Intent(applicationContext, HomeActivity::class.java)
-//            startActivity(intent)
-//        }
+        if(mSharedPref.getString("email","")!!.isNotEmpty()){
+            finish()
+            val intent = Intent(applicationContext, HomeActivity::class.java)
+            startActivity(intent)
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         buttonLogin.setOnClickListener {
@@ -53,13 +53,12 @@ class LoginActivity : AppCompatActivity() {
             apiuser.enqueue(object: Callback<UserAndToken>{
                 override fun onResponse(call: Call<UserAndToken>, response: Response<UserAndToken>) {
                     if(response.isSuccessful){
-                        Toast.makeText(applicationContext, "good", Toast.LENGTH_LONG).show()
                         Log.i("login User:", response.body().toString())
                         //Store company data in sharedpref
                         //mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
                         mSharedPref.edit().apply{
                             putString("photoProfil", response.body()?.user?.photoProfil.toString())
-                            putString("id", response.body()?.user?._id.toString())
+                            putString("_id", response.body()?.user?._id.toString())
                             putString("nom", response.body()?.user?.nom.toString())
                             putString("email", response.body()?.user?.email.toString())
                             putString("numt", response.body()?.user?.numt.toString())

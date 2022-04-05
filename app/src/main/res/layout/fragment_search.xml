@@ -16,12 +16,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/ajouterArticle"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="70dp"
         android:background="@drawable/ic_plus"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView" />
 
 </RelativeLayout>
