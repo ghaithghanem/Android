@@ -15,13 +15,18 @@ interface Api {
     fun userSignUp(
         @PartMap data : LinkedHashMap<String, RequestBody>,
         @Part profilePicture: MultipartBody.Part
-    ) : Call<userSignUpResponse>
+    ) : Call<User>
 
     @POST("user/login")
     fun userLogin(
         @Body user: User
-    ):Call<UserAndToken>
+    ):Call<User>
 
+    @POST("https://api-C2B86342-5275-4183-9F0C-28EF1E4B3014.sendbird.com/v3/users")
+    @Headers("Api-Token: 9838c32272965383009ace17937bb8565e108d38")
+    fun sendBirdCreate(
+        @Body user: SendBirdUser
+    ):Call<SendBirdUser>
 
     companion object {
         fun create() : Api {

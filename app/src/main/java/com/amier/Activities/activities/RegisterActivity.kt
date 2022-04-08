@@ -9,19 +9,23 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.amier.Activities.api.Api
-import com.amier.Activities.models.userSignUpResponse
+import com.amier.Activities.models.SendBirdUser
+import com.amier.Activities.models.User
 import com.amier.modernloginregister.R
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.sendbird.android.SendBird
 import kotlinx.android.synthetic.main.activity_register.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Pattern
 
     class RegisterActivity : AppCompatActivity(){
     private var selectedImageUri: Uri? = null
@@ -29,7 +33,7 @@ import retrofit2.Response
 private lateinit var fab: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        SendBird.init("C2B86342-5275-4183-9F0C-28EF1E4B3014", this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         imagePicker = findViewById(R.id.profileimage)
@@ -80,46 +84,29 @@ private lateinit var fab: FloatingActionButton
                 return@setOnClickListener
             }
 
-            val parcelFileDescriptor =
-                contentResolver.openFileDescriptor(selectedImageUri!!, "r", null) ?: return@setOnClickListener
-            login(
-                name,name1,
-                email,
-                password,
-                num
-            )
-            print(parcelFileDescriptor);
-//            val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-//            val file = File(cacheDir, contentResolver.getFileName(selectedImageUri!!))
-//
-//            val outputStream = FileOutputStream(file)
-//            inputStream.copyTo(outputStream)
-//            progress_bar.progress = 0
-//            val body = UploadRequestBody(file, "photoProfil", this)
-//            Api().createUser(
-//                MultipartBody.Part.createFormData("photoProfil", file.name,body),
-//                MultipartBody.Part.createFormData("nom", name,body),
-//                MultipartBody.Part.createFormData("prenom", name1,body),
-//                MultipartBody.Part.createFormData("password", password,body),
-//                MultipartBody.Part.createFormData("numt", num,body),
-//                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "json")
-//                ).enqueue(object: Callback<DefaultResponse>{
-//                override fun onResponse(
-//                    call: Call<DefaultResponse>,
-//                    response: Response<DefaultResponse>
-//                ) {
-//                    Toast.makeText(applicationContext, response.body()?.reponse,Toast.LENGTH_LONG).show()
-//                    progress_bar.progress = 100
-//                }
-//
-//                override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
-//                    Toast.makeText(applicationContext,t.message, Toast.LENGTH_LONG).show()
-//                    progress_bar.progress = 0
-//                }
-//            })
+            if(checkEmail(editTextEmail.text.toString())){
+                try {
+                    createAccount(
+                        name,name1,
+                        email,
+                        password,
+                        num
+                    )
+                }catch (e:Exception){
+                    Log.d("erreur creating user : ",e.toString())
+                }
+
+
+            }else{
+                editTextEmail.error = "Invalid Email"
+                editTextEmail.requestFocus()
+                return@setOnClickListener
+            }
+
+
         }
     }
-    private fun login(firstName: String, lastName: String, email: String, password: String, number: String){
+    private fun createAccount(firstName: String, lastName: String, email: String, password: String, number: String){
         if(selectedImageUri == null){
             println("image null")
 
@@ -138,9 +125,6 @@ private lateinit var fab: FloatingActionButton
             )
         }
 
-
-        Log.d("MyActivity", "on finish upload file")
-
         val apiInterface = Api.create()
         val data: LinkedHashMap<String, RequestBody> = LinkedHashMap()
 
@@ -150,27 +134,46 @@ private lateinit var fab: FloatingActionButton
         data["password"] = RequestBody.create(MultipartBody.FORM, password)
         data["numt"] = RequestBody.create(MultipartBody.FORM, number)
 
+
         if (profilePicture != null) {
             apiInterface.userSignUp(data,profilePicture).enqueue(object:
-                Callback<userSignUpResponse> {
+                Callback<User> {
                 override fun onResponse(
-                    call: Call<userSignUpResponse>,
-                    response: Response<userSignUpResponse>
+                    call: Call<User>,
+                    response: Response<User>
                 ) {
                     if(response.isSuccessful){
-                        Log.i("onResponse goooood", response.body().toString())
-                        showAlertDialog()
+                        Log.i("signup good", response.body().toString())
+                        var userSendbird = SendBirdUser()
+                        userSendbird.nickname = response.body()?.user?.prenom.toString()
+                        userSendbird.profile_url = response.body()?.user?.photoProfil.toString()
+                        userSendbird.user_id = response.body()?.user?._id.toString()
+                        Log.i("photo de profil sendbird : ", userSendbird.profile_url!!)
+                        apiInterface.sendBirdCreate(userSendbird).enqueue(object:
+                            Callback<SendBirdUser>{
+                            override fun onResponse(
+                                call: Call<SendBirdUser>,
+                                response: Response<SendBirdUser>
+                            ) {
+                                Log.i("server reponse sendbird good: ",response.body().toString())
+                            }
+                            override fun onFailure(call: Call<SendBirdUser>, t: Throwable) {
+                                Log.i("server reponse sendbird error: ",t.toString())
+                            }
+                        })
+//                        showAlertDialog()
                     } else {
-                        Log.i("OnResponse not good", response.body().toString())
+                        Log.i("signup error", response.body().toString())
                     }
                 }
 
-                override fun onFailure(call: Call<userSignUpResponse>, t: Throwable) {
+                override fun onFailure(call: Call<User>, t: Throwable) {
                     progress_bar.progress = 0
-                    println("noooooooooooooooooo")
+                    println(t.toString())
                 }
 
             })
+
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -184,9 +187,9 @@ private lateinit var fab: FloatingActionButton
     private fun showAlertDialog(){
         MaterialAlertDialogBuilder(this)
             .setTitle("Alert")
-            .setMessage("Thank you for choosing showapp.tn! \n We have sent you an email to confirm your account")
+            .setMessage("Merci pour avoir choisis Lost&Found ! \n Vous avez reçu un email contenant un lien de verification!")
             .setPositiveButton("Ok") {dialog, which ->
-                showSnackbar("welcome")
+                showSnackbar("Bienvenue")
             }
             .show()
     }
@@ -198,6 +201,27 @@ private lateinit var fab: FloatingActionButton
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
     }
 
+        fun createAccountToSendBird(userID: String, nickname: String, photo: String) :Boolean{
+            val jsonObject = JSONObject()
+            jsonObject.put("user_id", userID)
+            jsonObject.put("nickname", nickname)
+            jsonObject.put("profile_url", photo)
+            var a = false
 
+            return  a
+        }
+
+        private fun checkEmail(email: String): Boolean {
+            return EMAIL_ADDRESS_PATTERN.matcher(email).matches()
+        }
+        val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+"
+        )
 
 }

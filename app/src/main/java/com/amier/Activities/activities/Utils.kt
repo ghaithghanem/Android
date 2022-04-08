@@ -5,6 +5,10 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
+import android.text.TextUtils
+import android.util.Patterns
+import java.util.regex.Pattern
+
 
 fun View.snackbar(message: String) {
     Snackbar.make(
@@ -29,3 +33,5 @@ fun ContentResolver.getFileName(fileUri: Uri): String {
     }
     return name
 }
+
+

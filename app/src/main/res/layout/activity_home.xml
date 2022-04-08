@@ -8,6 +8,7 @@
     tools:context="com.amier.Activities.activities.HomeActivity">
 
     <androidx.fragment.app.FragmentContainerView
+
         android:id="@+id/main_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
@@ -23,11 +24,11 @@
     <com.ismaeldivita.chipnavigation.ChipNavigationBar
         android:id="@+id/bottom_nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/rounded_corner"
+        android:layout_height="70dp"
+        android:background="@drawable/login_btn_bg"
+
         android:elevation="3dp"
+        app:cnb_menuResource="@menu/bottom_menu"
         app:itemIconSize="30dp"
         app:itemIconTint="@drawable/item_selector"
         app:itemRippleColor="@android:color/transparent"
@@ -35,7 +36,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:cnb_menuResource="@menu/bottom_menu" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

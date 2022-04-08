@@ -18,9 +18,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.amier.Activities.api.Api
 import com.amier.Activities.api.ApiArticle
+import com.amier.Activities.api.ApiQuestion
 import com.amier.Activities.models.Articles
 import com.amier.Activities.models.Question
-import com.amier.Activities.models.userSignUpResponse
+import com.amier.Activities.models.SendBirdUser
 import com.amier.modernloginregister.R
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -53,7 +54,7 @@ class AjouterArticle : AppCompatActivity() {
         fab = findViewById(R.id.cameraArticle)
          ajoutQuestion = findViewById<Button>(R.id.ajoutQuestion)
          valider = findViewById<Button>(R.id.AjouterArticleButton)
-
+        ajoutQuestion!!.visibility = View.INVISIBLE
         fab.setOnClickListener(View.OnClickListener {
             ImagePicker.with(this)
                 .crop()	    			//Crop image(Optional), Check Customization for more option
@@ -65,6 +66,19 @@ class AjouterArticle : AppCompatActivity() {
             showdialog()
         }
 
+        switch1?.setOnCheckedChangeListener { _, isChecked ->
+            if (!isChecked){
+                type = "Found"
+                ajoutQuestion!!.visibility = View.INVISIBLE
+
+            }
+            else{
+                ajoutQuestion!!.visibility = View.AUTOFILL_TYPE_TEXT
+                type = "Lost"
+
+            }
+
+        }
 
         valider!!.setOnClickListener {
             val titre = titreArticle.text.toString().trim()
@@ -73,11 +87,7 @@ class AjouterArticle : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Tout les champs sont obligatoire", Toast.LENGTH_LONG).show()
             }else{
 
-                if(switch1.isActivated){
-                    type="Found"
-                }else{
-                    type="Lost"
-                }
+
                 var questionEnvoye = ""
                 if(questionnn!=null){
                     questionEnvoye = questionnn.toString()
@@ -130,7 +140,28 @@ class AjouterArticle : AppCompatActivity() {
                 ) {
                     if(response.isSuccessful){
                         Log.i("onResponse goooood", response.body().toString())
-                        showAlertDialog()
+                        //on va ajouter la question ici
+                        if(!questionnn.isNullOrEmpty()){
+
+                            val apiQ = ApiQuestion.create()
+                            var questionObject = Question()
+                            questionObject.article = response.body()?._id.toString()
+                            questionObject.titre = questionnn
+
+                            apiQ.postQuestion(questionObject).enqueue(object:
+                                Callback<Question>{
+                                override fun onResponse(
+                                    call: Call<Question>,
+                                    response: Response<Question>
+                                ) {
+                                    Log.i("server reponse question good: ",response.body().toString())
+                                }
+                                override fun onFailure(call: Call<Question>, t: Throwable) {
+                                    Log.i("server reponse question error: ",t.toString())
+                                }
+                            })
+                        }
+                        //showAlertDialog()
                     } else {
                         Log.i("OnResponse not good", response.body().toString())
                     }

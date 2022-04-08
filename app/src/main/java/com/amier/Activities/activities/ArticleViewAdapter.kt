@@ -1,22 +1,32 @@
 package com.amier.Activities.activities
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.amier.Activities.models.Articles
 import com.amier.modernloginregister.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.article_item.view.*
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
-class ArticleViewAdapter(private val listArticle : List<Articles>,private val listener: OnItemClickListener):
+class ArticleViewAdapter    (private val listArticle : List<Articles>,private val listener: OnItemClickListener):
     RecyclerView.Adapter<ArticleViewAdapter.MyViewHolder>(){
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
+
         fun bind(property: Articles){
             itemView.ArticleName.text = property.nom
             itemView.ArticleDescription.text = property.description
+            itemView.Creation.text = property.dateCreation
             Glide.with(itemView).load(property.photo).into(itemView.ArticleImage)
         }
         init {
@@ -46,6 +56,7 @@ class ArticleViewAdapter(private val listArticle : List<Articles>,private val li
 
         holder.bind(listArticle.get(position))
     }
+
 
 
 }

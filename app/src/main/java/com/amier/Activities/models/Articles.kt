@@ -12,8 +12,5 @@ data class Articles(
     var user: User? = null,
     var question: Question? = null,
     var __v: Int? = null,
-)
-
-data class ArticlesReponse(
     var articles: List<Articles>? = null,
 )

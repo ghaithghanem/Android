@@ -6,14 +6,26 @@
     tools:context="com.amier.Activities.activities.SearchFragment">
 
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchBar"
+        app:startIconDrawable="@drawable/ic_baseline_search_24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/keyword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Chercher par nom ..." />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.recyclerview.widget.RecyclerView
+
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_below="@id/searchBar" />
 
     <Button
         android:id="@+id/ajouterArticle"
@@ -22,7 +34,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="70dp"
-        android:background="@drawable/ic_plus"
+        android:background="@drawable/ic_baseline_add_circle_24"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView" />
 
 </RelativeLayout>

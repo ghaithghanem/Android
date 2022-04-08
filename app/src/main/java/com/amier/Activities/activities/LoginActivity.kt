@@ -9,9 +9,9 @@ import android.util.Log
 import android.widget.Toast
 import com.amier.Activities.api.Api
 import com.amier.Activities.models.User
-import com.amier.Activities.models.UserAndToken
 import com.amier.Activities.storage.SharedPrefManager
 import com.amier.modernloginregister.R
+import com.sendbird.android.SendBird
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,9 +19,12 @@ import retrofit2.Response
 
 
 class LoginActivity : AppCompatActivity() {
+
     lateinit var mSharedPref: SharedPreferences
     var loadingDialog = LoadingDialog()
     override fun onCreate(savedInstanceState: Bundle?) {
+        SendBird.init("C2B86342-5275-4183-9F0C-28EF1E4B3014", this)
+
         mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
         if(mSharedPref.getString("email","")!!.isNotEmpty()){
             finish()
@@ -50,8 +53,8 @@ class LoginActivity : AppCompatActivity() {
             userr.password = editTextPassword.text.toString()
             val apiuser = Api.create().userLogin(userr)
             loadingDialog.LoadingDialog(this)
-            apiuser.enqueue(object: Callback<UserAndToken>{
-                override fun onResponse(call: Call<UserAndToken>, response: Response<UserAndToken>) {
+            apiuser.enqueue(object: Callback<User>{
+                override fun onResponse(call: Call<User>, response: Response<User>) {
                     if(response.isSuccessful){
                         Log.i("login User:", response.body().toString())
                         //Store company data in sharedpref
@@ -65,6 +68,12 @@ class LoginActivity : AppCompatActivity() {
                             putString("prenom", response.body()?.user?.prenom.toString())
                             //putBoolean("session", true)
                         }.apply()
+                        Log.i("shared pref id user : ",mSharedPref.getString("nom","")!!)
+                        if(connectToSendBird(mSharedPref.getString("_id","")!!)){
+                            Log.i("sendbird connecté :","")
+                        }else{
+                            Log.i("sendbird moch connecté :","")
+                        }
                         loadingDialog.dismissDialog()
                         finish()
                         val intent = Intent(applicationContext, HomeActivity::class.java)
@@ -72,15 +81,15 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(intent)
                     } else {
                         loadingDialog.dismissDialog()
-                        Toast.makeText(applicationContext, "uncorrect email or password", Toast.LENGTH_LONG).show()
+                            Toast.makeText(applicationContext, "Email ou Mot de passe incorrect", Toast.LENGTH_LONG).show()
                         Log.i("RETROFIT_API_RESPONSE", response.toString())
                         Log.i("login response", response.body().toString())
                     }
                 }
 
-                override fun onFailure(call: Call<UserAndToken>, t: Throwable) {
+                override fun onFailure(call: Call<User>, t: Throwable) {
                     loadingDialog.dismissDialog()
-                    Toast.makeText(applicationContext, "erreur server", Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, "Erreur server", Toast.LENGTH_LONG).show()
                 }
 
             })
@@ -100,5 +109,16 @@ class LoginActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
+    }
+    fun connectToSendBird(userID: String) :Boolean{
+        var a = false
+        SendBird.connect(userID) { user, e ->
+            if (e != null) {
+                Log.i("erreur connecting sendbird : ",e.toString())
+            }else{
+                a = true
+            }
+        }
+        return  a
     }
 }

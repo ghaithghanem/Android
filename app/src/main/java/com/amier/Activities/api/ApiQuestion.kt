@@ -9,25 +9,21 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
-interface ApiArticle {
-    @Multipart
-    @POST("article")
-    fun ajoutArticle(
-        @PartMap data : LinkedHashMap<String, RequestBody>,
-        @Part profilePicture: MultipartBody.Part
-    ) : Call<Articles>
+interface ApiQuestion {
+    @POST("question")
+    fun postQuestion(
+        @Body user: Question
+    ):Call<Question>
 
 
-    @GET("article")
-    fun GetAllArticles():Call<Articles>
 
     companion object {
-        fun create() : ApiArticle {
+        fun create() : ApiQuestion {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Constants.BASE_URL)
                 .build()
-            return retrofit.create(ApiArticle::class.java)
+            return retrofit.create(ApiQuestion::class.java)
 
         }
     }
