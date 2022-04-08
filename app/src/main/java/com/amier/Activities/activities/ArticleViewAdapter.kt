@@ -1,6 +1,7 @@
 package com.amier.Activities.activities
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -19,14 +20,22 @@ import java.util.*
 
 class ArticleViewAdapter    (private val listArticle : List<Articles>,private val listener: OnItemClickListener):
     RecyclerView.Adapter<ArticleViewAdapter.MyViewHolder>(){
+    val DayInMilliSec = 86400000
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
 
 
         fun bind(property: Articles){
             itemView.ArticleName.text = property.nom
             itemView.ArticleDescription.text = property.description
-            itemView.Creation.text = property.dateCreation
+            itemView.Creation.text = getDateTime(property.dateCreation!!)
+            itemView.textView9.text = property.type
+            if(property.type.equals("Lost")){
+                itemView.article.setBackgroundColor(Color.RED)
+            }else{
+                itemView.article.setBackgroundColor(Color.GREEN)
+            }
             Glide.with(itemView).load(property.photo).into(itemView.ArticleImage)
         }
         init {
@@ -58,5 +67,18 @@ class ArticleViewAdapter    (private val listArticle : List<Articles>,private va
     }
 
 
+    @SuppressLint("SimpleDateFormat")
+    private fun getDateTime(s: String): String? {
+        return try {
+            val sdf = SimpleDateFormat("dd/MM/YYYY")
+            val netDate = Date(s.toLong()  ).addDays(1)
+            sdf.format(netDate)
+        } catch (e: Exception) {
+            e.toString()
+        }
+    }
 
+    fun Date.addDays(numberOfDaysToAdd: Int): Date{
+        return Date(this.time + numberOfDaysToAdd * DayInMilliSec)
+    }
 }
