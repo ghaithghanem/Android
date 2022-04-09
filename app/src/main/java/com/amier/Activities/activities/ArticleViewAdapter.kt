@@ -26,16 +26,18 @@ class ArticleViewAdapter    (private val listArticle : List<Articles>,private va
 
 
 
+        @SuppressLint("ResourceAsColor")
         fun bind(property: Articles){
             itemView.ArticleName.text = property.nom
             itemView.ArticleDescription.text = property.description
             itemView.Creation.text = getDateTime(property.dateCreation!!)
             itemView.textView9.text = property.type
-            if(property.type.equals("Lost")){
-                itemView.article.setBackgroundColor(Color.RED)
-            }else{
-                itemView.article.setBackgroundColor(Color.GREEN)
-            }
+
+//            if(property.type.equals("Lost")){
+//                itemView.article.setBackgroundColor(Color.RED)
+//            }else{
+//                itemView.article.setBackgroundColor(Color.GREEN)
+//            }
             Glide.with(itemView).load(property.photo).into(itemView.ArticleImage)
         }
         init {

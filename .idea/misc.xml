@@ -18,16 +18,23 @@
         <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/loading_dialog.xml" value="0.19739583333333333" />
         <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/menu/bottom_menu.xml" value="0.5" />
         <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/menu/last_menu.xml" value="0.19739583333333333" />
-        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_ajouter_article.xml" value="0.4802538787023977" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/drawable/ic_baseline_drive_file_rename_outline_24.xml" value="0.3703125" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/drawable/login_btn_bg.xml" value="0.36512820512820515" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/drawable/radiobutton_smiley.xml" value="0.21354166666666666" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_ajouter_article.xml" value="0.33" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_channel.xml" value="0.3541666666666667" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_detail_article.xml" value="0.33" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_detail_user_article.xml" value="0.1" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_home.xml" value="0.3546875" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_login.xml" value="0.3546875" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_maps.xml" value="0.18" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_register.xml" value="0.38396624472573837" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/activity_select_type_article.xml" value="0.340625" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/article_item.xml" value="0.3007246376811594" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/custom_info_contents.xml" value="0.1890625" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/fragment_home.xml" value="0.3541666666666667" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/fragment_location.xml" value="0.3541666666666667" />
-        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/fragment_search.xml" value="0.25" />
+        <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/fragment_search.xml" value="0.46709916589434664" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/layout/item_channel_chooser.xml" value="0.3546875" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/menu/bottom_menu.xml" value="0.3546875" />
         <entry key="..\:/Users/Dell/Documents/GitHub/Android/app/src/main/res/menu/last_menu.xml" value="0.3546875" />

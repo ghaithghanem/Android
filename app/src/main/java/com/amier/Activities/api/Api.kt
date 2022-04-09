@@ -13,12 +13,23 @@ interface Api {
     @Multipart
     @POST("user")
     fun userSignUp(
-        @PartMap data : LinkedHashMap<String, RequestBody>,
-        @Part profilePicture: MultipartBody.Part
+        @PartMap data: LinkedHashMap<String, RequestBody>,
+        @Part profilePicture: MultipartBody.Part?
     ) : Call<User>
 
     @POST("user/login")
     fun userLogin(
+        @Body user: User
+    ):Call<User>
+
+    @GET("user/oyoy/{id}")
+    fun checkVerified(
+        @Path("id") id: String,
+
+    ):Call<User>
+
+    @POST("user/Auth")
+    fun userLoginSocial(
         @Body user: User
     ):Call<User>
 

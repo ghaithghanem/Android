@@ -12,10 +12,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import com.amier.Activities.api.Api
 import com.amier.Activities.api.ApiArticle
 import com.amier.Activities.api.ApiQuestion
@@ -27,6 +24,8 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_ajouter_article.*
 import kotlinx.android.synthetic.main.activity_register.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -42,19 +41,55 @@ class AjouterArticle : AppCompatActivity() {
     var imagePicker: ImageView?=null
     var questionnn :String?=null
     var ajoutQuestion :Button?=null
+    var titreText :TextInputEditText?=null
+    var descriptionLayout :TextInputLayout?=null
+    var photoLayout :TextInputLayout?=null
+    var GpsArticle :Button?=null
+    var whatDidYou : TextView?=null
+    var ou : TextView?=null
     var valider :Button?=null
-    var type:String="Lost"
+    lateinit var type:String
+    lateinit var txtLogin: TextInputEditText
+     var titreLayout: TextInputLayout? =null
 
     private lateinit var fab: FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
         setContentView(R.layout.activity_ajouter_article)
-        imagePicker = findViewById(R.id.imageArticle)
+
+        txtLogin = findViewById(R.id.titreText)
+        GpsArticle = findViewById(R.id.GpsArticle)
+        titreLayout = findViewById(R.id.titreLayout)
+        descriptionLayout = findViewById(R.id.descriptionLayout)
         fab = findViewById(R.id.cameraArticle)
-         ajoutQuestion = findViewById<Button>(R.id.ajoutQuestion)
-         valider = findViewById<Button>(R.id.AjouterArticleButton)
-        ajoutQuestion!!.visibility = View.INVISIBLE
+        imagePicker = findViewById(R.id.imageArticle)
+
+        whatDidYou = findViewById(R.id.whatDidYou)
+        photoLayout = findViewById(R.id.photoLayout)
+
+        ou = findViewById(R.id.ou)
+
+
+
+        ajoutQuestion = findViewById(R.id.ajoutQuestion)
+        valider = findViewById(R.id.AjouterArticleButton)
+        type = intent.getStringExtra("type")!!
+        if(type == "Lost"){
+            whatDidYou!!.text = "Qu'avez vous perdu ?"
+            ou!!.text = "Ou l'avez vous perdu ??"
+            ajoutQuestion!!.visibility = View.INVISIBLE
+        }else{
+            whatDidYou!!.text = "Qu'avez vous trouvé ?"
+            ou!!.text = "Ou l'avez vous trouvé ??"
+        }
+
+       GpsArticle!!.setOnClickListener{
+           val intent = Intent(applicationContext, MapsActivity::class.java)
+           intent.putExtra("type",type)
+           startActivity(intent)
+
+       }
         fab.setOnClickListener(View.OnClickListener {
             ImagePicker.with(this)
                 .crop()	    			//Crop image(Optional), Check Customization for more option
@@ -66,46 +101,78 @@ class AjouterArticle : AppCompatActivity() {
             showdialog()
         }
 
-        switch1?.setOnCheckedChangeListener { _, isChecked ->
-            if (!isChecked){
-                type = "Found"
-                ajoutQuestion!!.visibility = View.INVISIBLE
-
-            }
-            else{
-                ajoutQuestion!!.visibility = View.AUTOFILL_TYPE_TEXT
-                type = "Lost"
-
-            }
-
-        }
 
         valider!!.setOnClickListener {
-            val titre = titreArticle.text.toString().trim()
-            val description = editTextTextMultiLine3.text.toString().trim()
-            if(selectedImageUri == null || titre.isEmpty() ||description.isEmpty()){
-                Toast.makeText(applicationContext, "Tout les champs sont obligatoire", Toast.LENGTH_LONG).show()
-            }else{
+            if(validate()) {
 
 
-                var questionEnvoye = ""
-                if(questionnn!=null){
-                    questionEnvoye = questionnn.toString()
-                }
-                AjoutArticle(titre,questionEnvoye,description,type,mSharedPref.getString("_id","")!!)
+                val titre = txtLogin.text.toString().trim()
+                val description = descriptionText.text.toString().trim()
+
+
+
+                    var questionEnvoye = ""
+                    if (questionnn != null) {
+                        questionEnvoye = questionnn.toString()
+                    }
+                    val resultat = AjoutArticle(
+                        titre,
+                        questionEnvoye,
+                        description,
+                        type,
+                        mSharedPref.getString("_id", "")!!
+                    )
+                    Log.d("le resultat est : ", resultat)
+                    this.finish()
+                    if (resultat == "good") {
+                        this.finish()
+                        Toast.makeText(
+                            applicationContext,
+                            "Email ou Mot de passe incorrect",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else if (resultat.contains("echec")) {
+                        val builder = AlertDialog.Builder(view!!.context)
+                        builder.setTitle("Alert")
+                        builder.setMessage("Verifier d'abord votre compte avec l'email envoyé!")
+
+                        builder.show()
+                    }
+
+
             }
-
         }
 
     }
 
+    private fun validate(): Boolean {
+        titreLayout!!.error = null
+        descriptionLayout!!.error = null
+        photoLayout!!.error = null
 
+        if (txtLogin.text!!.isEmpty()){
+            titreLayout!!.error = "Champs obligatoire !"
+            return false
+        }
 
-    private fun AjoutArticle(nom: String, question: String, description: String, type: String, user: String){
+        if (descriptionText.text!!.isEmpty()){
+            descriptionLayout!!.error = "Champs obligatoire"
+            return false
+        }
         if(selectedImageUri == null){
-            println("image null")
+            photoLayout!!.error = "Photo obligatoire"
+            return false
+        }
 
-            return
+        return true
+    }
+
+
+
+    private fun AjoutArticle(nom: String, question: String, description: String, type: String, user: String):String{
+        if(selectedImageUri == null){
+
+            return "imageNull"
         }
 
 
@@ -120,12 +187,17 @@ class AjouterArticle : AppCompatActivity() {
             )
         }
 
+        var a = ""
         val apiInterface = ApiArticle.create()
         val data: LinkedHashMap<String, RequestBody> = LinkedHashMap()
 
         data["nom"] = RequestBody.create(MultipartBody.FORM, nom)
         if(question.isNotEmpty()){
             data["question"] = RequestBody.create(MultipartBody.FORM, question)
+        }
+        if(intent.getStringExtra("lat") !=null){
+            data["lat"] = RequestBody.create(MultipartBody.FORM,intent.getStringExtra("lat")!!.toString())
+            data["long"] = RequestBody.create(MultipartBody.FORM,intent.getStringExtra("long")!!.toString())
         }
         data["description"] = RequestBody.create(MultipartBody.FORM, description)
         data["type"] = RequestBody.create(MultipartBody.FORM, type)
@@ -144,7 +216,7 @@ class AjouterArticle : AppCompatActivity() {
                         if(!questionnn.isNullOrEmpty()){
 
                             val apiQ = ApiQuestion.create()
-                            var questionObject = Question()
+                            val questionObject = Question()
                             questionObject.article = response.body()?._id.toString()
                             questionObject.titre = questionnn
 
@@ -154,26 +226,30 @@ class AjouterArticle : AppCompatActivity() {
                                     call: Call<Question>,
                                     response: Response<Question>
                                 ) {
+                                    a="good"
                                     Log.i("server reponse question good: ",response.body().toString())
                                 }
                                 override fun onFailure(call: Call<Question>, t: Throwable) {
-                                    Log.i("server reponse question error: ",t.toString())
+                                    a="echec question"
+
                                 }
                             })
                         }
                         //showAlertDialog()
                     } else {
+
                         Log.i("OnResponse not good", response.body().toString())
                     }
                 }
 
                 override fun onFailure(call: Call<Articles>, t: Throwable) {
                     progress_bar.progress = 0
-                    println("noooooooooooooooooo")
+                    a="echec article"
                 }
 
             })
         }
+        return a
     }
 
     private fun showAlertDialog(){
@@ -210,6 +286,7 @@ class AjouterArticle : AppCompatActivity() {
 
         builder.show()
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && requestCode == ImagePicker.REQUEST_CODE){

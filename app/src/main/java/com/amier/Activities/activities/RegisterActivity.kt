@@ -106,7 +106,7 @@ private lateinit var fab: FloatingActionButton
 
         }
     }
-    private fun createAccount(firstName: String, lastName: String, email: String, password: String, number: String){
+     fun createAccount(firstName: String, lastName: String, email: String, password: String, number: String){
         if(selectedImageUri == null){
             println("image null")
 
@@ -136,8 +136,7 @@ private lateinit var fab: FloatingActionButton
 
 
         if (profilePicture != null) {
-            apiInterface.userSignUp(data,profilePicture).enqueue(object:
-                Callback<User> {
+            apiInterface.userSignUp(data,profilePicture).enqueue(object: Callback<User> {
                 override fun onResponse(
                     call: Call<User>,
                     response: Response<User>

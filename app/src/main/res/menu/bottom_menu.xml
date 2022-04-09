@@ -14,7 +14,7 @@
         android:title="Discussion" />
     <item
         android:id="@+id/nav_search"
-        android:icon="@drawable/ic_base_location"
+        android:icon="@drawable/ic_baseline_search_24"
         android:title="LostAndFound" />
     <item
         android:id="@+id/nav_last"

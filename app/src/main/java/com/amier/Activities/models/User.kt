@@ -12,7 +12,8 @@ data class User(
         val token : String? = null,
         val reponse : String? = null,
         var code: Int?= null,
-        val message:String? = null
+        val message:String? = null,
+        val isVerified:Boolean? = null
 
 
 )

@@ -1,14 +1,16 @@
 package com.amier.Activities.activities
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.GridLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amier.Activities.api.Api
 import com.amier.Activities.api.ApiArticle
@@ -23,14 +25,16 @@ import retrofit2.Response
 import android.text.Editable
 
 import android.text.TextWatcher
-
-
-
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
+import com.amier.Activities.models.User
 
 
 class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
+    lateinit var mSharedPref: SharedPreferences
+
     var filtredArticle: MutableList<Articles> = arrayListOf()
-    lateinit var articlesDispo: MutableList<Articles>
+    var articlesDispo: MutableList<Articles> = arrayListOf()
     lateinit var test: ArticleViewAdapter.OnItemClickListener
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +42,8 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
     ): View? {
         var searcha = ""
         test = this
+        var happycheck = false
+        var sadcheck = false
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
@@ -47,17 +53,122 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
             articlesDispo = newss as MutableList<Articles>
 
 
-                view.recyclerView.adapter = ArticleViewAdapter(newss, this)
+            view.recyclerView.adapter = ArticleViewAdapter(newss, this)
         }
+        mSharedPref = view.context!!.getSharedPreferences("UserPref", Context.MODE_PRIVATE)
 
+        if (!mSharedPref.getBoolean("isVerified", false)) {
+            val apiInterfacee = Api.create()
+
+            apiInterfacee.checkVerified(mSharedPref.getString("_id", "")!!)
+                .enqueue(object : Callback<User> {
+                    override fun onResponse(call: Call<User>, response: Response<User>) {
+                        if (response.isSuccessful) {
+                            if (response.body()!!.isVerified!!) {
+                                mSharedPref.edit()
+                                    .putBoolean("isVerified", response.body()!!.isVerified!!)
+                                    .apply()
+                            }
+                            //}
+                        } else {
+                            Log.i("nooooo", response.body().toString())
+                        }
+                    }
+
+                    override fun onFailure(call: Call<User>, t: Throwable) {
+                        t.printStackTrace()
+                        println("OnFailure")
+                    }
+
+                })
+
+        }
         val ajouterArticleButton = view.findViewById<Button>(R.id.ajouterArticle)
+
+        val lost = view.findViewById<TextView>(R.id.Lost)
+        val found = view.findViewById<TextView>(R.id.Found)
+        val linearlayoutLost = view.findViewById<LinearLayout>(R.id.linearlayoutLost)
+        val linearlayoutFound = view.findViewById<LinearLayout>(R.id.linearlayoutFound)
+        val happy = view.findViewById<ImageView>(R.id.happy)
+        val sad = view.findViewById<ImageView>(R.id.sad)
         val searchBar = view.findViewById<TextInputLayout>(R.id.searchBar)
         val keyword = view.findViewById<TextInputEditText>(R.id.keyword)
 
-        ajouterArticleButton.setOnClickListener {
-            val intent = Intent(activity, AjouterArticle::class.java)
-            startActivity(intent)
+        linearlayoutLost.setOnClickListener {
+            if (!sadcheck) {
+                sad.setImageResource(R.drawable.sadcolored)
+                happy.setImageResource(R.drawable.happy)
+                lost.setTextColor(Color.BLUE)
+                found.setTextColor(Color.BLACK)
+                sadcheck = true
+                happycheck = false
+                if (articlesDispo.size > 0) {
+                filtredArticle.clear()
+
+                    articlesDispo.forEach {
+                        if (it.type!!.contains("Lost")) {
+                            filtredArticle.add(it)
+                        }
+                    }
+                    view.recyclerView.adapter = ArticleViewAdapter(filtredArticle, test)
+                }
+            }
+            else {
+                sad.setImageResource(R.drawable.sad)
+                lost.setTextColor(Color.BLACK)
+                sadcheck = false
+                view.recyclerView.adapter = ArticleViewAdapter(articlesDispo, test)
+            }
+
         }
+        linearlayoutFound.setOnClickListener {
+            if (!happycheck) {
+                sad.setImageResource(R.drawable.sad)
+                happy.setImageResource(R.drawable.happycolored)
+                found.setTextColor(Color.BLUE)
+                lost.setTextColor(Color.BLACK)
+                happycheck = true
+                sadcheck = false
+                if (articlesDispo.size > 0) {
+                    filtredArticle.clear()
+
+                    articlesDispo.forEach {
+                        if (it.type!!.contains("Found")) {
+                            filtredArticle.add(it)
+                        }
+                    }
+                    view.recyclerView.adapter = ArticleViewAdapter(filtredArticle, test)
+                }
+
+            }
+            else {
+                happy.setImageResource(R.drawable.happy)
+                found.setTextColor(Color.BLACK)
+                happycheck = false
+                view.recyclerView.adapter = ArticleViewAdapter(articlesDispo, test)
+            }
+        }
+
+
+        ajouterArticleButton.setOnClickListener {
+
+            if(!mSharedPref.getBoolean("isVerified",false)){
+                showAlertDialog()
+
+            }else{
+                val intent = Intent(activity, selectTypeArticle::class.java)
+                startActivity(intent)
+            }
+
+        }
+        keyword.setOnFocusChangeListener(View.OnFocusChangeListener { view, focused ->
+            val keyboard =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            if (focused) keyboard.showSoftInput(keyword, 0) else keyboard.hideSoftInputFromWindow(
+                keyword.getWindowToken(),
+                0
+            )
+        })
         keyword.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(
@@ -94,11 +205,13 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
 
         apiInterface.GetAllArticles().enqueue(object: Callback<Articles> {
             override fun onResponse(call: Call<Articles>, response: Response<Articles>) {
-                if(response.isSuccessful){
+                if(response.code() == 200){
                     return callback(response.body()!!.articles!!)
                     Log.i("yessss", response.body().toString())
                     //}
-                } else {
+                }else if(response.code() == 201){
+
+                }else {
                     Log.i("nooooo", response.body().toString())
                 }
             }
@@ -110,7 +223,14 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
 
         })
     }
+    private fun showAlertDialog(){
 
+        val builder = AlertDialog.Builder(view!!.context)
+        builder.setTitle("Alert")
+        builder.setMessage("Verifier d'abord votre compte avec l'email envoyé!")
+
+        builder.show()
+    }
     override fun onItemClick(position: Int, articles: List<Articles>) {
         val intent = Intent(activity, DetailArticle::class.java)
         intent.putExtra("nom",articles[position].nom)
@@ -119,11 +239,11 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
         intent.putExtra("description",articles[position].description)
         intent.putExtra("type",articles[position].type)
         intent.putExtra("photo",articles[position].photo)
-            intent.putExtra("userArticleNom", articles[position].user?.nom)
-            intent.putExtra("userArticlePrenom", articles[position].user?.prenom)
-            intent.putExtra("userArticlePhoto", articles[position].user?.photoProfil)
-            intent.putExtra("userArticleEmail", articles[position].user?.email)
-            intent.putExtra("userDetail", articles[position].user?._id)
+        intent.putExtra("userArticleNom", articles[position].user?.nom)
+        intent.putExtra("userArticlePrenom", articles[position].user?.prenom)
+        intent.putExtra("userArticlePhoto", articles[position].user?.photoProfil)
+        intent.putExtra("userArticleEmail", articles[position].user?.email)
+        intent.putExtra("userDetail", articles[position].user?._id)
         intent.putExtra("question", articles[position].question?._id)
         intent.putExtra("questionTitle", articles[position].question?.titre)
         startActivity(intent)
