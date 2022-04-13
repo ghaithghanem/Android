@@ -29,16 +29,15 @@ interface Api {
 
     @POST("user/forgotPassword")
     fun forgotpassword(
-        @Body email: email
+        @Body email: Email
     ):Call<ForgotAndToken>
 
-    @POST("resetPassword/{email}/{token}")
+    @POST("user/resetPassword/{email}/{token}")
     fun resetpassword(
-        @Path("email") email:token,
-        @Path("token") token:token,
-        @Body password: token,
-
-    ):Call<ForgotAndToken>
+        @Path("email") email:String,
+        @Path("token") token:Int,
+        @Body Password: passreset,
+    ):Call<res>
 
     @POST("user/login")
     fun userLogin(

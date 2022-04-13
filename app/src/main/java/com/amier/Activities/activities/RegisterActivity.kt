@@ -129,6 +129,7 @@ private lateinit var fab: FloatingActionButton
 
 
         val stream = contentResolver.openInputStream(selectedImageUri!!)
+        println("-------------------------------------"+stream)
         val request =
             stream?.let { RequestBody.create("image/*".toMediaTypeOrNull(), it.readBytes()) } // read all bytes using kotlin extension
         val profilePicture = request?.let {
@@ -152,6 +153,7 @@ private lateinit var fab: FloatingActionButton
         data["numt"] = RequestBody.create(MultipartBody.FORM, number)
 
         if (profilePicture != null) {
+            println("++++++++++++++++++++++++++++++++++++"+profilePicture)
             apiInterface.userSignUp(data,profilePicture).enqueue(object:
                 Callback<userSignUpResponse> {
                 override fun onResponse(

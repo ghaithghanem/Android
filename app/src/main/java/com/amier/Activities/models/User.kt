@@ -1,5 +1,5 @@
 package com.amier.Activities.models
-
+const val EMAIL="EMAIL"
 data class User(
         var _id: String? = null,
     var email: String? = null,
@@ -9,14 +9,20 @@ data class User(
     var photoProfil: String? = null,
     var numt: String? = null
 )
-data class email(
+data class Email(
     var email: String? = null,
 )
-data class token (
-    var email: String? = null,
-    var token : String? = null,
-    var password: String? = null,
+data class res(
+    var reponse: String? = null,
+)
+data class passreset(
+    var Password: String? = null,
+)
+
+data class TokenReset (
+    var token : Int? = null,
         )
+
 
 data class ForgotAndToken(
     val succes : Boolean? = null,
@@ -40,12 +46,4 @@ data class userSignUpResponse (
 data class userUpdateResponse (
     val user : User? = null,
     val reponse : String? = null
-)
-data class ForgetPassword(
-    var email: String?= null,
-    var code: Int?= null,
-    var password: String?= null
-)
-data class FrogetResponse(
-    val message:String? = null
 )
