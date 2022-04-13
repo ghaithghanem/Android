@@ -1,31 +1,29 @@
-package com.amier.Activities.activities
+    package com.amier.Activities.activities
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import com.amier.Activities.api.Api
-import com.amier.Activities.models.DefaultResponse
+import com.amier.Activities.models.userSignUpResponse
 import com.amier.modernloginregister.R
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_register.*
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 
-class RegisterActivity : AppCompatActivity(), UploadRequestBody.UploadCallback{
+    class RegisterActivity : AppCompatActivity(){
     private var selectedImageUri: Uri? = null
  var imagePicker: ImageView?=null
 private lateinit var fab: FloatingActionButton
@@ -57,21 +55,18 @@ private lateinit var fab: FloatingActionButton
                 editTextEmail.requestFocus()
                 return@setOnClickListener
             }
-
-
             if(password.isEmpty()){
                 editTextPassword.error = "Password required"
                 editTextPassword.requestFocus()
                 return@setOnClickListener
             }
-
             if(name.isEmpty()){
                 editTextName.error = "Name required"
                 editTextName.requestFocus()
                 return@setOnClickListener
             }
             if(name1.isEmpty()){
-                editTextName.error = "Name required"
+                editTextName.error = "Last name required"
                 editTextName.requestFocus()
                 return@setOnClickListener
             }
@@ -87,39 +82,97 @@ private lateinit var fab: FloatingActionButton
 
             val parcelFileDescriptor =
                 contentResolver.openFileDescriptor(selectedImageUri!!, "r", null) ?: return@setOnClickListener
-
-            val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-            val file = File(cacheDir, contentResolver.getFileName(selectedImageUri!!))
-
-            val outputStream = FileOutputStream(file)
-            inputStream.copyTo(outputStream)
-            progress_bar.progress = 0
-            val body = UploadRequestBody(file, "photoProfil", this)
-            Api().createUser(
-                MultipartBody.Part.createFormData("photoProfil", file.name,body),
-                MultipartBody.Part.createFormData("nom", name,body),
-                MultipartBody.Part.createFormData("prenom", name1,body),
-                MultipartBody.Part.createFormData("password", password,body),
-                MultipartBody.Part.createFormData("numt", num,body),
-                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "json")
-                ).enqueue(object: Callback<DefaultResponse>{
-                override fun onResponse(
-                    call: Call<DefaultResponse>,
-                    response: Response<DefaultResponse>
-                ) {
-                    Toast.makeText(applicationContext, response.body()?.reponse,Toast.LENGTH_LONG).show()
-                    progress_bar.progress = 100
-                }
-
-                override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
-                    Toast.makeText(applicationContext,t.message, Toast.LENGTH_LONG).show()
-                    progress_bar.progress = 0
-                }
-            })
+            login(
+                name,name1,
+                email,
+                password,
+                num
+            )
+            print(parcelFileDescriptor);
+//            val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+//            val file = File(cacheDir, contentResolver.getFileName(selectedImageUri!!))
+//
+//            val outputStream = FileOutputStream(file)
+//            inputStream.copyTo(outputStream)
+//            progress_bar.progress = 0
+//            val body = UploadRequestBody(file, "photoProfil", this)
+//            Api().createUser(
+//                MultipartBody.Part.createFormData("photoProfil", file.name,body),
+//                MultipartBody.Part.createFormData("nom", name,body),
+//                MultipartBody.Part.createFormData("prenom", name1,body),
+//                MultipartBody.Part.createFormData("password", password,body),
+//                MultipartBody.Part.createFormData("numt", num,body),
+//                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "json")
+//                ).enqueue(object: Callback<DefaultResponse>{
+//                override fun onResponse(
+//                    call: Call<DefaultResponse>,
+//                    response: Response<DefaultResponse>
+//                ) {
+//                    Toast.makeText(applicationContext, response.body()?.reponse,Toast.LENGTH_LONG).show()
+//                    progress_bar.progress = 100
+//                }
+//
+//                override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+//                    Toast.makeText(applicationContext,t.message, Toast.LENGTH_LONG).show()
+//                    progress_bar.progress = 0
+//                }
+//            })
         }
     }
-    private fun uploadImage() {
+    private fun login(firstName: String, lastName: String, email: String, password: String, number: String){
 
+        if(selectedImageUri == null){
+            println("image null")
+
+            return
+        }
+
+
+        val stream = contentResolver.openInputStream(selectedImageUri!!)
+        val request =
+            stream?.let { RequestBody.create("image/*".toMediaTypeOrNull(), it.readBytes()) } // read all bytes using kotlin extension
+        val profilePicture = request?.let {
+            MultipartBody.Part.createFormData(
+                "photoProfil",
+                "image.jpeg",
+                it
+            )
+        }
+
+
+        Log.d("MyActivity", "on finish upload file")
+
+        val apiInterface = Api.create()
+        val data: LinkedHashMap<String, RequestBody> = LinkedHashMap()
+
+        data["nom"] = RequestBody.create(MultipartBody.FORM, firstName)
+        data["prenom"] = RequestBody.create(MultipartBody.FORM, lastName)
+        data["email"] = RequestBody.create(MultipartBody.FORM, email)
+        data["password"] = RequestBody.create(MultipartBody.FORM, password)
+        data["numt"] = RequestBody.create(MultipartBody.FORM, number)
+
+        if (profilePicture != null) {
+            apiInterface.userSignUp(data,profilePicture).enqueue(object:
+                Callback<userSignUpResponse> {
+                override fun onResponse(
+                    call: Call<userSignUpResponse>,
+                    response: Response<userSignUpResponse>
+                ) {
+                    if(response.isSuccessful){
+                        Log.i("onResponse goooood", response.body().toString())
+                        showAlertDialog()
+                    } else {
+                        Log.i("OnResponse not good", response.body().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<userSignUpResponse>, t: Throwable) {
+                    progress_bar.progress = 0
+                    println("noooooooooooooooooo")
+                }
+
+            })
+        }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -129,13 +182,23 @@ private lateinit var fab: FloatingActionButton
 
         }
     }
+    private fun showAlertDialog(){
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Alert")
+            .setMessage("Thank you for choosing showapp.tn! \n We have sent you an email to confirm your account")
+            .setPositiveButton("Ok") {dialog, which ->
+                showSnackbar("welcome")
+            }
+            .show()
+    }
+    private fun showSnackbar(msg: String) {
+        Snackbar.make(layout_root, msg, Snackbar.LENGTH_SHORT).show()
+    }
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
     }
 
-    override fun onProgressUpdate(percentage: Int) {
-        progress_bar.progress = percentage
-    }
+
 
 }

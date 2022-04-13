@@ -46,7 +46,7 @@ class SharedPrefManager private constructor(private val mCtx: Context){
     }
 
     companion object {
-        private val SHARED_PREF_NAME = "my_shared_preff"
+        val SHARED_PREF_NAME = "my_shared_preff"
         private var mInstance: SharedPrefManager? = null
         @Synchronized
         fun getInstance(mCtx: Context): SharedPrefManager {

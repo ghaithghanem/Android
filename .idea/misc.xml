@@ -3,6 +3,58 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/drawable/article_item.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/drawable/ic_base_location.xml" value="0.19537037037037036" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/drawable/ic_person.xml" value="0.21354166666666666" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/drawable/rounded_corner.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/activity_home.xml" value="0.24547101449275363" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/activity_login.xml" value="0.24547101449275363" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/activity_register.xml" value="0.20878623188405798" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/article_item.xml" value="0.3546875" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/fragment_last.xml" value="0.18" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/fragment_location.xml" value="0.10185185185185185" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/fragment_search.xml" value="0.33" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/layout/loading_dialog.xml" value="0.19739583333333333" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/menu/bottom_menu.xml" value="0.5" />
+        <entry key="..\:/Users/Dell/Desktop/Android-ghaith/Android-ghaith/app/src/main/res/menu/last_menu.xml" value="0.19739583333333333" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable-v24/ic_baseline_photo_camera_24.xml" value="0.20277777777777778" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable-v24/ic_phone.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable-v24/round_border.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable-v24/wave.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/bacround_gradient.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/buttonshape.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/buttonshape1.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_add.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_arrow.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_email.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_local_phone_black_24dp.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_notification.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_plus.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_zoom.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/item_selector.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/login_btn_bg.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/rounded_corner.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/activity_forgot_password.xml" value="0.18931159420289856" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/activity_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/activity_login.xml" value="0.22" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/activity_register.xml" value="0.25" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/activity_reset.xml" value="0.1852355072463768" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/activity_splash_screen.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/activity_update.xml" value="0.17272727272727273" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/article_item.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/fragment_last.xml" value="0.18" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/fragment_location.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/fragment_search.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_add.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_email.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_image.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_info.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/loading_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/update.xml" value="0.1" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/menu/bottom_menu.xml" value="0.25" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/menu/last_menu.xml" value="0.20416666666666666" />
         <entry key="..\:/androidtest/ModernLoginRegister-master/app/src/main/res/layout/activity_home.xml" value="0.1" />
         <entry key="..\:/androidtest/ModernLoginRegister-master/app/src/main/res/layout/activity_login.xml" value="0.20416666666666666" />
         <entry key="..\:/androidtest/ModernLoginRegister-master/app/src/main/res/layout/activity_register.xml" value="0.25" />

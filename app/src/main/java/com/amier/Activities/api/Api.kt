@@ -1,7 +1,7 @@
 package com.amier.Activities.api
 
-import com.amier.Activities.models.DefaultResponse
-import com.amier.Activities.models.LoginResponse
+import com.amier.Activities.Constants
+import com.amier.Activities.models.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -11,28 +11,52 @@ import retrofit2.http.*
 
 interface Api {
     @Multipart
-    @POST("")
-    fun createUser(
-        @Part photoProfil: MultipartBody.Part,
-        @Part("email") email: MultipartBody.Part,
-        @Part("nom") name: MultipartBody.Part,
-        @Part("prenom") name1: MultipartBody.Part,
-        @Part("password") password: MultipartBody.Part,
-        @Part("numt") num: RequestBody
-    ):Call<DefaultResponse>
+    @PATCH("user/{id}")
+    fun userUpdate(
+        @Path("id") id:String,
+        @PartMap data : LinkedHashMap<String, RequestBody>,
+        @Part profilePicture: MultipartBody.Part
+    ) : Call<userUpdateResponse>
+
+
+    @Multipart
+    @POST("user")
+    fun userSignUp(
+        @PartMap data : LinkedHashMap<String, RequestBody>,
+        @Part profilePicture: MultipartBody.Part
+    ) : Call<userSignUpResponse>
+
+
+    @POST("user/forgotPassword")
+    fun forgotpassword(
+        @Body email: email
+    ):Call<ForgotAndToken>
+
+    @POST("resetPassword/{email}/{token}")
+    fun resetpassword(
+        @Path("email") email:token,
+        @Path("token") token:token,
+        @Body password: token,
+
+    ):Call<ForgotAndToken>
+
+    @POST("user/login")
+    fun userLogin(
+        @Body user: User
+    ):Call<UserAndToken>
+
+
+    @GET("article")
+    fun GetAllArticles():Call<ArticlesReponse>
+
     companion object {
-        operator fun invoke(): Api {
-            return Retrofit.Builder()
-                .baseUrl("https://lost-and-found-back.herokuapp.com/user/")
+        fun create() : Api {
+            val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(Constants.BASE_URL)
                 .build()
-                .create(Api::class.java)
+            return retrofit.create(Api::class.java)
+
         }
     }
-    @FormUrlEncoded
-    @POST("login")
-    fun userLogin(
-        @Field("email")email: String,
-        @Field("password")password: String
-    ):Call<LoginResponse>
 }
