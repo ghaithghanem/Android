@@ -77,12 +77,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
 
-        android:layout_marginTop="10dp"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/ajouterArticle"
-        android:layout_below="@id/linearlayoutLost">
+        android:layout_below="@id/linearlayoutLost"
+        android:layout_marginTop="10dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 

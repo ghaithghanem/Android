@@ -52,7 +52,6 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
         getNewsData { newss: List<Articles> ->
             articlesDispo = newss as MutableList<Articles>
 
-
             view.recyclerView.adapter = ArticleViewAdapter(newss, this)
         }
         mSharedPref = view.context!!.getSharedPreferences("UserPref", Context.MODE_PRIVATE)

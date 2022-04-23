@@ -16,17 +16,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:elevation="10dp">
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:paddingTop="20dp"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
                 android:src="@drawable/common_google_signin_btn_icon_dark" />
-
+            </androidx.cardview.widget.CardView>
             <TextView
-                android:paddingTop="25dp"
-                android:layout_gravity="center"
+                android:id="@+id/textView5"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@drawable/border"
+                android:padding="5dp"
+                android:text="TextView"
+                android:textColor="@color/templateButton"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"/>
+            <TextView
+                android:layout_marginTop="25dp"
+                android:layout_marginStart="20dp"
+                android:gravity="center"
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,12 +53,7 @@
                 android:textColor="@color/black"
                 android:textSize="45dp" />
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="TextView" />
+
 
             <TextView
                 android:id="@+id/editTextTextMultiLine3"
@@ -50,13 +64,21 @@
                 android:ems="10"
                 android:textAlignment="center"
                  />
-
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:elevation="10dp">
             <com.google.android.gms.maps.MapView
                 android:id="@+id/map_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="2"
                 tools:ignore="SpeakableTextPresentCheck" />
+            </androidx.cardview.widget.CardView>
 
             <FrameLayout
 
@@ -84,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Repondre a la question" />
+                    android:text="Repondre a la question"/>
             </FrameLayout>
         </LinearLayout>
     </ScrollView>

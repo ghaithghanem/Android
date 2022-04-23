@@ -17,7 +17,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+
+import com.google.firebase.messaging.FirebaseMessaging
 import com.sendbird.android.SendBird
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.editTextEmail
@@ -36,13 +39,12 @@ const val RC_SIGN_IN = 123
 
 
 class LoginActivity : AppCompatActivity() {
+
     lateinit var mSharedPref: SharedPreferences
     var loadingDialog = LoadingDialog()
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        SendBird.init("C2B86342-5275-4183-9F0C-28EF1E4B3014", this)
-
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -56,13 +58,18 @@ class LoginActivity : AppCompatActivity() {
 
 
 
+
+        SendBird.init("C2B86342-5275-4183-9F0C-28EF1E4B3014", this)
+
         mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
         if(mSharedPref.getString("email","")!!.isNotEmpty()){
+
             finish()
             val intent = Intent(applicationContext, HomeActivity::class.java)
             startActivity(intent)
         }
-        super.onCreate(savedInstanceState)
+
+
         buttonLogin.setOnClickListener {
             val email = editTextEmail.text.toString().trim()
             val password = editTextPassword.text.toString().trim()
@@ -127,10 +134,33 @@ class LoginActivity : AppCompatActivity() {
             })
 
         }
-
         btnRegLogin.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+
+            var userr = User()
+
+            userr.nom = "melek"
+            userr.type = "reponse"
+            userr.tokenfb = mSharedPref.getString("tokenfb","")
+            println(userr)
+            val apiuser = Api.create().sendNotif(userr)
+            apiuser.enqueue(object: Callback<User>{
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    println(response.code())
+                    if(response.isSuccessful){
+                        Log.i("notif User:", response.body().toString())
+
+                    } else {
+                        Log.i("notif response", response.body().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Toast.makeText(applicationContext, "Erreur server", Toast.LENGTH_LONG).show()
+                }
+            })
+
+//            startActivity(Intent(this, RegisterActivity::class.java))
+//            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
     }
 
@@ -217,10 +247,28 @@ class LoginActivity : AppCompatActivity() {
 //        val account = GoogleSignIn.getLastSignedInAccount(this)
 //        var ok = updateUI(account)
         super.onStart()
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+            else {
+
+                val token = task.result
+
+                mSharedPref.edit().apply {
+                    putString("tokenfb", token)
+
+                }.apply()
+            }
+
+        })
         if(SharedPrefManager.getInstance(this).isLoggedIn){
-            val intent = Intent(applicationContext, HomeActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            val intent = Intent(applicationContext, voirArticle::class.java)
             startActivity(intent)
+//            val intent = Intent(applicationContext, HomeActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            startActivity(intent)
         }
     }
     fun connectToSendBird(userID: String) :Boolean{
@@ -299,4 +347,6 @@ class LoginActivity : AppCompatActivity() {
 
 
     }
+
+
 }

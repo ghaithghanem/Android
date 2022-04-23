@@ -56,19 +56,17 @@
             android:text="creation"
             android:textSize="18sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="250dp"
-            android:layout_marginTop="30dp"
-            android:gravity="center_horizontal">
+
 
             <TextView
+                android:layout_toEndOf="@id/Creation"
                 android:id="@+id/textView9"
+                android:layout_below="@id/ArticleDescription"
+                android:layout_marginStart="40dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView" />
-        </LinearLayout>
+
 
 
     </RelativeLayout>

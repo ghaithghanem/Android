@@ -6,34 +6,36 @@
     tools:context="com.amier.Activities.activities.LastFragment">
 
     <ImageView
+        android:id="@+id/menu_dropDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/ic_menu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp"
-        android:id="@+id/menu_dropDown"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageUser"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="28dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="28dp"
         android:contentDescription="test"
+        android:src="@drawable/ic_person"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_person"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/nameUser"
         android:layout_width="200dp"
-        android:layout_height="30dp"
-        android:text="user name"
-        android:textSize="20sp"
+        android:layout_height="0dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="48dp"
+        android:layout_marginBottom="184dp"
+        android:text="user name"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintStart_toEndOf="@+id/imageUser"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,13 +43,23 @@
         android:id="@+id/emailUser"
         android:layout_width="200dp"
         android:layout_height="30dp"
-        android:text="email"
-        android:textSize="20sp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="110dp"
+        android:text="email"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/imageUser"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/boutontest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="141dp"
+        android:layout_marginBottom="421dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameUser" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

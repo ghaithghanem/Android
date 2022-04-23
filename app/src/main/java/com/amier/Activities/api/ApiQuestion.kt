@@ -15,6 +15,10 @@ interface ApiQuestion {
         @Body user: Question
     ):Call<Question>
 
+    @POST("reponse/{id}")
+    fun postReponse(@Path("id") idArticle: String?,
+        @Body reponse: Reponse
+    ):Call<Reponse>
 
 
     companion object {

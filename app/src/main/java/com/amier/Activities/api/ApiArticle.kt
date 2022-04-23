@@ -21,6 +21,12 @@ interface ApiArticle {
     @GET("article")
     fun GetAllArticles():Call<Articles>
 
+    @GET("article/myArticles/{id}")
+    fun GetMyArticles(@Path("id") id: String?):Call<Articles>
+
+    @GET("article/myArticles/{id}")
+    fun GetArticlesByUser(@Path("id") id: String?): Call<Articles>
+
     companion object {
         fun create() : ApiArticle {
             val retrofit = Retrofit.Builder()

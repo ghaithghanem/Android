@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import com.amier.modernloginregister.R
+import kotlinx.android.synthetic.main.fragment_last.*
 
 
 class LastFragment : Fragment() {
@@ -21,6 +23,11 @@ class LastFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_last, container, false)
 
+        val bouton = view.findViewById<Button>(R.id.boutontest)
+        bouton.setOnClickListener {
+            val intent = Intent(view.context, voirArticle::class.java)
+            startActivity(intent)
+        }
         val menu = view.findViewById<ImageView>(R.id.menu_dropDown)
         menu.setOnClickListener {
             val popupMenu: PopupMenu = PopupMenu(requireContext(), menu)

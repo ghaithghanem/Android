@@ -61,6 +61,7 @@ class ArticleViewAdapter    (private val listArticle : List<Articles>,private va
         return MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.article_item, parent, false))
     }
     override fun getItemCount(): Int {
+        println(listArticle.size)
         return listArticle.size
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
