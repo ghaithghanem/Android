@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import com.amier.Activities.api.Api
 import com.amier.Activities.models.userSignUpResponse
 import com.amier.Activities.models.userUpdateResponse
@@ -31,6 +32,8 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
 class UpdateActivity : AppCompatActivity() {
     lateinit var _id: String
@@ -177,7 +180,18 @@ println(_id)
                     if(response.isSuccessful){
                         Log.i("onResponse goooood", response.body().toString())
 
-
+                        MotionToast.darkColorToast(
+                            this@UpdateActivity,
+                            "Good ",
+                            "Success Update",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_TOP,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(
+                                this@UpdateActivity,
+                                www.sanju.motiontoast.R.font.helvetica_regular
+                            )
+                        )
 
                         mSharedPref.edit().apply{
 
@@ -195,7 +209,7 @@ println(_id)
                         }.apply()
 
                         finish()
-                        val intent = Intent(applicationContext, LastFragment::class.java)
+                        val intent = Intent(applicationContext, HomeActivity::class.java)
 
                         startActivity(intent)
 

@@ -27,6 +27,7 @@
         <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/buttonshape1.xml" value="0.2203125" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_add.xml" value="0.2203125" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_arrow.xml" value="0.2203125" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_deco.xml" value="0.2203125" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_email.xml" value="0.2203125" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_local_phone_black_24dp.xml" value="0.2203125" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/drawable/ic_notification.xml" value="0.2203125" />
@@ -49,7 +50,7 @@
         <entry key="..\:/andro/Android-melek/app/src/main/res/layout/fragment_search.xml" value="0.20416666666666666" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_add.xml" value="0.20416666666666666" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_email.xml" value="0.20416666666666666" />
-        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_image.xml" value="0.20416666666666666" />
+        <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_image.xml" value="0.25" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/layout/item_info.xml" value="0.20416666666666666" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/layout/loading_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/andro/Android-melek/app/src/main/res/layout/update.xml" value="0.1" />

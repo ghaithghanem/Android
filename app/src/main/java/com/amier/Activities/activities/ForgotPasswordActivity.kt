@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import com.amier.Activities.api.Api
 import com.amier.Activities.models.EMAIL
 import com.amier.Activities.models.Email
@@ -14,6 +15,8 @@ import com.amier.modernloginregister.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
 class ForgotPasswordActivity : AppCompatActivity() {
     lateinit var verif_email: Button
@@ -45,8 +48,19 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 ) {
                     if(response.isSuccessful){
 
+                        MotionToast.darkColorToast(
+                            this@ForgotPasswordActivity,
+                            "Good ",
+                            "Next step",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_TOP,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(
+                                this@ForgotPasswordActivity,
+                                www.sanju.motiontoast.R.font.helvetica_regular
+                            )
+                        )
 
-                        Toast.makeText(applicationContext, "good", Toast.LENGTH_LONG).show()
                         val intent = Intent(applicationContext, resetActivity::class.java)
                         intent.apply {
                             putExtra(EMAIL, emailreset)

@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import com.amier.Activities.api.Api
 import com.amier.Activities.models.User
 import com.amier.Activities.models.UserAndToken
@@ -19,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
 
 class LoginActivity : AppCompatActivity() {
@@ -70,7 +73,18 @@ class LoginActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<UserAndToken>, response: Response<UserAndToken>) {
                     if(response.isSuccessful){
 
-                        Toast.makeText(applicationContext, "good", Toast.LENGTH_LONG).show()
+                        MotionToast.darkColorToast(
+                            this@LoginActivity,
+                            "Good ",
+                            "Success Login",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_TOP,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(
+                                this@LoginActivity,
+                                www.sanju.motiontoast.R.font.helvetica_regular
+                            )
+                        )
                         Log.i("login User:", response.body().toString())
                         //Store company data in sharedpref
                         //mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)

@@ -13,7 +13,7 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="210dp"
             android:layout_marginTop="40dp"
             app:cardCornerRadius="15dp"
             app:cardElevation="10dp"
@@ -21,10 +21,15 @@
             card_view:cardCornerRAdius="5dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="131dp"
+
                 android:layout_marginTop="23dp"
                 android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp" />
 
                 <TextView
                     android:id="@+id/nameUser"
@@ -37,16 +42,6 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"
-                    android:text="PID:362Hb458760"
-                    android:textColor="#5C5A5A"
-                    android:textSize="13sp"
-                    android:textStyle="normal" />
 
                 <View
                     android:layout_width="match_parent"
@@ -55,7 +50,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="53dp"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="3">
@@ -90,12 +85,14 @@
                         android:layout_height="match_parent"
                         android:background="#79D6D1D1" />
 
-                    <TextView
+                    <Button
+                        android:id="@+id/edit"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="38dp"
                         android:layout_weight="1"
+                        android:backgroundTint="#F5FFFFFF"
                         android:gravity="center"
-                        android:text="Vitals"
+                        android:text="Edit Profile"
                         android:textColor="#636262"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -114,8 +111,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageUser"
-        android:layout_width="117dp"
-        android:layout_height="101dp"
+        android:layout_width="135dp"
+        android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:elevation="15dp"
 

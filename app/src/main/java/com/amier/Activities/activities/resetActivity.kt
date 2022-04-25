@@ -7,12 +7,15 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import com.amier.Activities.api.Api
 import com.amier.Activities.models.*
 import com.amier.modernloginregister.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
 class resetActivity : AppCompatActivity() {
     lateinit var verif_token: Button
@@ -50,7 +53,18 @@ println(name)
                     if(response.isSuccessful){
 
 
-                        Toast.makeText(applicationContext, "good", Toast.LENGTH_LONG).show()
+                        MotionToast.darkColorToast(
+                            this@resetActivity,
+                            "Good ",
+                            "Success reset Password",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_TOP,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(
+                                this@resetActivity,
+                                www.sanju.motiontoast.R.font.helvetica_regular
+                            )
+                        )
                         val intent = Intent(applicationContext, LoginActivity::class.java)
 
                         startActivity(intent)

@@ -10,6 +10,10 @@ import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+
 import com.amier.Activities.storage.SharedPrefManager
 import com.amier.modernloginregister.R
 import com.bumptech.glide.Glide
@@ -23,7 +27,7 @@ class LastFragment : Fragment() {
     lateinit var emailnameProfile: TextView
     lateinit var phone: TextView
     private lateinit var B1: Button
-    private lateinit var up1: Button
+    private lateinit var edit: Button
     private lateinit var deco: ImageButton
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,11 +69,11 @@ class LastFragment : Fragment() {
             builder.create().show()
         }
 
-        /*up1 = view.findViewById<Button?>(R.id.up1)
-        up1.setOnClickListener {
+        edit = view.findViewById<Button?>(R.id.edit)
+        edit.setOnClickListener {
             val intent = Intent(requireContext(), UpdateActivity::class.java)
             startActivity(intent)
-        }*/
+        }
 
 
 
