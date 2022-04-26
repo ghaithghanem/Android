@@ -12,5 +12,5 @@ data class Articles(
     var user: User? = null,
     var question: Question? = null,
     var __v: Int? = null,
-    var articles: List<Articles>? = null,
+    var articles: MutableList<Articles>? = null,
 )

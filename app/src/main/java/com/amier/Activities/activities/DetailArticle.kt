@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import com.amier.Activities.api.ApiArticle
+import com.amier.Activities.api.ApiNotification
 import com.amier.Activities.api.ApiQuestion
 import com.amier.Activities.models.Articles
 import com.amier.Activities.models.Reponse
@@ -107,6 +108,7 @@ class DetailArticle : AppCompatActivity()  {
             val reponse= Reponse()
             reponse.description = input.text.toString()
             reponse.userr = idd
+            Log.i("la reponse",reponse.toString())
             val apiInterface = ApiQuestion.create()
             apiInterface.postReponse(questionID,reponse).enqueue(object:
                 Callback<Reponse> {
@@ -115,7 +117,31 @@ class DetailArticle : AppCompatActivity()  {
                     response: Response<Reponse>
                 ) {
                     if(response.isSuccessful){
-                        Log.i("onResponse goooood", response.body().toString())
+                        val notif= User()
+                        notif.tokenfb = intent.getStringExtra("tokenfbUser")
+                        notif.nom = mSharedPref.getString("nom","")
+                        notif.type = "reponse"
+                        Log.i("notif qu'on va envoyer est : ",notif.toString())
+                        val apiInterface = ApiNotification.create()
+                        apiInterface.pushNotif(notif).enqueue(object:
+                            Callback<User> {
+                            override fun onResponse(
+                                call: Call<User>,
+                                response: Response<User>
+                            ) {
+                                if(response.isSuccessful){
+
+                                    Toast.makeText(applicationContext, "Notification envoyé avec succés", Toast.LENGTH_LONG).show()
+
+                                } else if (response.code() == 400){
+                                    Toast.makeText(applicationContext, "Vous avez déjà repondu a la question !", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                            override fun onFailure(call: Call<User>, t: Throwable) {
+                            }
+                        })
+                        Toast.makeText(applicationContext, "Message envoyé avec succés", Toast.LENGTH_LONG).show()
+
                     } else if (response.code() == 400){
                         Toast.makeText(applicationContext, "Vous avez déjà repondu a la question !", Toast.LENGTH_LONG).show()
                     }

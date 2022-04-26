@@ -63,13 +63,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp">
+
         <TextView
+            android:id="@+id/Articles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Articles"
             android:text="Les articles:"
-            android:textSize="22dp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textSize="22dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_viewArticleList"

@@ -244,8 +244,20 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
         intent.putExtra("userArticleEmail", articles[position].user?.email)
         intent.putExtra("userDetail", articles[position].user?._id)
         intent.putExtra("question", articles[position].question?._id)
+        intent.putExtra("tokenfbUser", articles[position].user?.tokenfb)
         intent.putExtra("questionTitle", articles[position].question?.titre)
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        view?.recyclerView?.layoutManager = LinearLayoutManager(activity)
+        view?.recyclerView?.setHasFixedSize(true)
+        getNewsData { newss: List<Articles> ->
+            articlesDispo = newss as MutableList<Articles>
+
+            view?.recyclerView?.adapter = ArticleViewAdapter(newss, this)
+        }
     }
 
 }

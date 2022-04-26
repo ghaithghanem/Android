@@ -28,6 +28,7 @@ import retrofit2.Response
 class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClickListener {
     lateinit var mSharedPref: SharedPreferences
     lateinit var userArticleid: String
+    lateinit var articleUser: MutableList<Articles>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_user_article)
@@ -55,13 +56,18 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
         recycler_viewArticleList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
         recycler_viewArticleList.setHasFixedSize(true)
 
-        getAllData{ articless : List<Articles> ->
+        getAllData{ articless : MutableList<Articles> ->
+            if(articless.isEmpty()){
+                Articles.text = "Pas d'articles à afficher "
+            }
             recycler_viewArticleList.adapter = UserArticleListAdapter(articless,this)
 
         }
 
+
+
     }
-    private fun getAllData(callback: (List<Articles>) -> Unit){
+    private fun getAllData(callback: (MutableList<Articles>) -> Unit){
         val apiInterface = ApiArticle.create()
         val id = userArticleid
         apiInterface.GetArticlesByUser(id).enqueue(object:
@@ -73,39 +79,12 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
                 if(response.isSuccessful){
                     Log.i("onResponse goooood", response.body().toString())
                     return callback(response.body()!!.articles!!)
-                    //on va ajouter la question ici
-//                    if(!questionnn.isNullOrEmpty()){
-//
-//                        val apiQ = ApiQuestion.create()
-//                        val questionObject = Question()
-//                        questionObject.article = response.body()?._id.toString()
-//                        questionObject.titre = questionnn
-//
-//                        apiQ.postQuestion(questionObject).enqueue(object:
-//                            Callback<Question> {
-//                            override fun onResponse(
-//                                call: Call<Question>,
-//                                response: Response<Question>
-//                            ) {
-//                                a="good"
-//                                Log.i("server reponse question good: ",response.body().toString())
-//                            }
-//                            override fun onFailure(call: Call<Question>, t: Throwable) {
-//                                a="echec question"
-//
-//                            }
-//                        })
-//                    }
-//                    showAlertDialog()
                 } else {
-
                     Log.i("OnResponse not good", response.body().toString())
                 }
             }
-
             override fun onFailure(call: Call<Articles>, t: Throwable) {
             }
-
         })
     }
 

@@ -93,11 +93,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         takePos = findViewById(R.id.button1)
         Log.i("type d'objet de google maps a ajouter article",type)
         takePos!!.setOnClickListener {
-            val intent = Intent(applicationContext, AjouterArticle::class.java)
-            intent.putExtra("lat",positionGps!![0].toString())
-            intent.putExtra("long",positionGps!![1].toString())
-            intent.putExtra("type",type)
-            startActivity(intent)
+
+            if(positionGps!!.isNotEmpty()){
+                intent.putExtra("lat",positionGps!![0].toString())
+                intent.putExtra("long",positionGps!![1].toString())
+                intent.putExtra("type",type)
+            }
             finish()
         }
         // Construct a PlacesClient

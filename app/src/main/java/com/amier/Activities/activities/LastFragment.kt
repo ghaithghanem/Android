@@ -64,4 +64,6 @@ class LastFragment : Fragment() {
         val intent = Intent(requireContext(), LastFragment::class.java)
         startActivity(intent)
     }
+
+
 }

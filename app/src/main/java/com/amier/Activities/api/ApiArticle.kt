@@ -18,8 +18,19 @@ interface ApiArticle {
     ) : Call<Articles>
 
 
+    @Multipart
+    @PATCH("article/{id}")
+    fun modifierArticle(
+        @Path("id") idArticle: String?,
+        @PartMap data : LinkedHashMap<String, RequestBody>,
+        @Part profilePicture: MultipartBody.Part?
+    ) : Call<Articles>
+
     @GET("article")
     fun GetAllArticles():Call<Articles>
+
+    @DELETE("article/{id}")
+    fun deleteArticle(@Path("id") idArticle: String?):Call<Articles>
 
     @GET("article/myArticles/{id}")
     fun GetMyArticles(@Path("id") id: String?):Call<Articles>

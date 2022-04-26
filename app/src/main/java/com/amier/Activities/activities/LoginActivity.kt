@@ -88,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
             var userr = User()
             userr.email = editTextEmail.text.toString()
             userr.password = editTextPassword.text.toString()
-
+            userr.tokenfb = mSharedPref.getString("tokenfb", "")!!
             loadingDialog.LoadingDialog(this)
             loadingDialog.startLoadingDialog()
             val apiuser = Api.create().userLogin(userr)
@@ -105,6 +105,7 @@ class LoginActivity : AppCompatActivity() {
                             putString("email", response.body()?.user?.email.toString())
                             putString("numt", response.body()?.user?.numt.toString())
                             putString("prenom", response.body()?.user?.prenom.toString())
+                            putString("tokenfb", response.body()?.user?.tokenfb.toString())
                             //putBoolean("session", true)
                         }.apply()
                         Log.i("shared pref id user : ",mSharedPref.getString("nom","")!!)
@@ -141,7 +142,7 @@ class LoginActivity : AppCompatActivity() {
             userr.nom = "melek"
             userr.type = "reponse"
             userr.tokenfb = mSharedPref.getString("tokenfb","")
-            println(userr)
+            println("user aaaa : "+userr)
             val apiuser = Api.create().sendNotif(userr)
             apiuser.enqueue(object: Callback<User>{
                 override fun onResponse(call: Call<User>, response: Response<User>) {
@@ -184,6 +185,7 @@ class LoginActivity : AppCompatActivity() {
             userr.email = account.email.toString()
             userr.nom = account.familyName.toString()
             userr.prenom = account.givenName.toString()
+            userr.tokenfb = mSharedPref.getString("tokenfb", "")!!
             Log.i("user google est : ",userr.toString()+account.photoUrl)
             loadingDialog.LoadingDialog(this)
             loadingDialog.startLoadingDialog()
@@ -201,6 +203,7 @@ class LoginActivity : AppCompatActivity() {
                             putString("email", response.body()?.user?.email.toString())
                             putString("numt", response.body()?.user?.numt.toString())
                             putString("prenom", response.body()?.user?.prenom.toString())
+                            putString("tokenfb", response.body()?.user?.tokenfb.toString())
                             //putBoolean("session", true)
                         }.apply()
                         Log.i("shared pref id user : ",mSharedPref.getString("nom","")!!)
@@ -260,6 +263,7 @@ class LoginActivity : AppCompatActivity() {
                     putString("tokenfb", token)
 
                 }.apply()
+                Log.i("tokenfb",token)
             }
 
         })
@@ -292,6 +296,7 @@ class LoginActivity : AppCompatActivity() {
         data["nom"] = RequestBody.create(MultipartBody.FORM, firstName)
         data["prenom"] = RequestBody.create(MultipartBody.FORM, lastName)
         data["email"] = RequestBody.create(MultipartBody.FORM, email)
+        data["tokenfb"] = RequestBody.create(MultipartBody.FORM, mSharedPref.getString("tokenfb", "")!!)
         if(password != null){
             data["password"] = RequestBody.create(MultipartBody.FORM, password)
             data["numt"] = RequestBody.create(MultipartBody.FORM, number!!)

@@ -20,6 +20,7 @@ import com.amier.Activities.models.Articles
 import com.amier.Activities.models.Question
 import com.amier.Activities.models.SendBirdUser
 import com.amier.modernloginregister.R
+import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -28,6 +29,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_ajouter_article.*
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.article_item.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -41,12 +43,13 @@ class AjouterArticle : AppCompatActivity() {
     var imagePicker: ImageView?=null
     var questionnn :String?=null
     var ajoutQuestion :Button?=null
-    var titreText :TextInputEditText?=null
+
     var descriptionLayout :TextInputLayout?=null
     var photoLayout :TextInputLayout?=null
     var GpsArticle :Button?=null
     var whatDidYou : TextView?=null
     var ou : TextView?=null
+    var changed  = false
     var valider :Button?=null
     lateinit var type:String
     lateinit var txtLogin: TextInputEditText
@@ -74,6 +77,17 @@ class AjouterArticle : AppCompatActivity() {
 
         ajoutQuestion = findViewById(R.id.ajoutQuestion)
         valider = findViewById(R.id.AjouterArticleButton)
+        if(intent.getStringExtra("nom") != null){
+            AjouterArticleButton.text = "Modifier"
+            titreText.setText(intent.getStringExtra("nom"))
+        }
+        if(intent.getStringExtra("description") != null){
+            descriptionText.setText(intent.getStringExtra("description"))
+        }
+        if(intent.getStringExtra("photo") != null){
+            selectedImageUri = Uri.parse(intent.getStringExtra("photo")!!)
+            Glide.with(this).load(intent.getStringExtra("photo")).into(imageArticle)
+        }
         type = intent.getStringExtra("type")!!
         if(type == "Lost"){
             whatDidYou!!.text = "Qu'avez vous perdu ?"
@@ -103,18 +117,28 @@ class AjouterArticle : AppCompatActivity() {
 
 
         valider!!.setOnClickListener {
-            if(validate()) {
+            val titre = txtLogin.text.toString().trim()
+            val description = descriptionText.text.toString().trim()
 
 
-                val titre = txtLogin.text.toString().trim()
-                val description = descriptionText.text.toString().trim()
+            var questionEnvoye = ""
+            if (questionnn != null) {
+                questionEnvoye = questionnn.toString()
+            }
+            if (intent.getStringExtra("nom") != null) {
+                val resultat = modifierArticle(
+                    titre,
+                    questionEnvoye,
+                    description,
+                    type,
+                    mSharedPref.getString("_id", "")!!
+                )
+                Log.d("le resultat est : ", resultat)
+            } else {
+                if (validate()) {
 
 
 
-                    var questionEnvoye = ""
-                    if (questionnn != null) {
-                        questionEnvoye = questionnn.toString()
-                    }
                     val resultat = AjoutArticle(
                         titre,
                         questionEnvoye,
@@ -140,9 +164,9 @@ class AjouterArticle : AppCompatActivity() {
                     }
 
 
+                }
             }
         }
-
     }
 
     private fun validate(): Boolean {
@@ -251,6 +275,91 @@ class AjouterArticle : AppCompatActivity() {
         }
         return a
     }
+    private fun modifierArticle(nom: String, question: String, description: String, type: String, user: String):String{
+
+        var photo : MultipartBody.Part? = null
+        if (changed) {
+            val stream = contentResolver.openInputStream(selectedImageUri!!)
+            val request =
+                stream?.let { RequestBody.create("image/*".toMediaTypeOrNull(), it.readBytes()) } // read all bytes using kotlin extension
+            photo = request?.let {
+                MultipartBody.Part.createFormData(
+                    "photoProfil",
+                    "image.jpeg",
+                    it
+
+                )
+
+            }
+        }
+
+
+
+        var a = ""
+        val apiInterface = ApiArticle.create()
+        val data: LinkedHashMap<String, RequestBody> = LinkedHashMap()
+
+        data["nom"] = RequestBody.create(MultipartBody.FORM, nom)
+        if(question.isNotEmpty()){
+            data["question"] = RequestBody.create(MultipartBody.FORM, question)
+        }
+        if(intent.getStringExtra("lat") !=null){
+            data["lat"] = RequestBody.create(MultipartBody.FORM,intent.getStringExtra("lat")!!.toString())
+            data["long"] = RequestBody.create(MultipartBody.FORM,intent.getStringExtra("long")!!.toString())
+        }
+        data["description"] = RequestBody.create(MultipartBody.FORM, description)
+        data["type"] = RequestBody.create(MultipartBody.FORM, type)
+        data["user"] = RequestBody.create(MultipartBody.FORM, user)
+
+
+            apiInterface.modifierArticle(intent.getStringExtra("idArticle")!!,data,photo).enqueue(object:
+                Callback<Articles> {
+                override fun onResponse(
+                    call: Call<Articles>,
+                    response: Response<Articles>
+                ) {
+                    if(response.isSuccessful){
+                        Log.i("onResponse goooood", response.body().toString())
+                        //on va ajouter la question ici
+                        if(!questionnn.isNullOrEmpty()){
+
+                            val apiQ = ApiQuestion.create()
+                            val questionObject = Question()
+                            questionObject.article = response.body()?._id.toString()
+                            questionObject.titre = questionnn
+
+                            apiQ.postQuestion(questionObject).enqueue(object:
+                                Callback<Question>{
+                                override fun onResponse(
+                                    call: Call<Question>,
+                                    response: Response<Question>
+                                ) {
+                                    finish()
+                                    a="good"
+                                    Log.i("server reponse question good: ",response.body().toString())
+                                }
+                                override fun onFailure(call: Call<Question>, t: Throwable) {
+                                    a="echec question"
+
+                                }
+                            })
+                        }
+                        //showAlertDialog()
+                    } else {
+
+                        Log.i("OnResponse not good", response.body().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<Articles>, t: Throwable) {
+                    progress_bar.progress = 0
+                    a="echec article"
+                }
+
+            })
+
+        return a
+    }
 
     private fun showAlertDialog(){
         MaterialAlertDialogBuilder(this)
@@ -292,6 +401,7 @@ class AjouterArticle : AppCompatActivity() {
         if(resultCode == Activity.RESULT_OK && requestCode == ImagePicker.REQUEST_CODE){
             selectedImageUri = data?.data
             imagePicker?.setImageURI(selectedImageUri)
+            changed = true
 
         }
     }

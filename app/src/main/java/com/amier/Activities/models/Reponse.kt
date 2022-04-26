@@ -7,5 +7,5 @@ data class Reponse(
     var userr: String? = null,
     var user: User? = null,
     var _v: Int? = null,
-    var reponses: List<Reponse>? = null
+    var reponses: MutableList<Reponse>? = null
 )

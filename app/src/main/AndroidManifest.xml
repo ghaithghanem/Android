@@ -19,6 +19,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name="com.amier.Activities.activities.voirReponse"
+            android:exported="false" />
+        <activity
             android:name="com.amier.Activities.activities.voirArticle"
             android:exported="false" />
 
@@ -84,6 +87,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+        <meta-data
+            android:name="firebase_analytics_collection_deactivated"
+            android:value="true" />
     </application>
 
 </manifest>
