@@ -13,11 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 
 import com.amier.Activities.storage.SharedPrefManager
 import com.amier.modernloginregister.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_last.view.*
+import java.util.concurrent.Executor
 
 
 class LastFragment : Fragment() {
@@ -26,6 +29,9 @@ class LastFragment : Fragment() {
     lateinit var usernameProfile: TextView
     lateinit var emailnameProfile: TextView
     lateinit var phone: TextView
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private lateinit var B1: Button
     private lateinit var edit: Button
     private lateinit var deco: ImageButton
@@ -33,6 +39,38 @@ class LastFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        executor = ContextCompat.getMainExecutor(requireContext())
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int,
+                                                   errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(
+                        requireContext(),
+                        "Autentikasi error: $errString", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    val intent = Intent(requireContext(), UpdateActivity::class.java)
+                    startActivity(intent)
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(
+                        view?.context, "Autentikasi gagal!",
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("biometric check")
+            .setSubtitle("lakukan scan sidik jari untuk melanjutkan")
+            .setNegativeButtonText("gunakan password")
+            .build()
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_last, container, false)
         mSharedPref = requireActivity().getSharedPreferences("UserPref", Context.MODE_PRIVATE)
@@ -71,8 +109,9 @@ class LastFragment : Fragment() {
 
         edit = view.findViewById<Button?>(R.id.edit)
         edit.setOnClickListener {
-            val intent = Intent(requireContext(), UpdateActivity::class.java)
-            startActivity(intent)
+            //val intent = Intent(requireContext(), UpdateActivity::class.java)
+            //startActivity(intent)
+            biometricPrompt.authenticate(promptInfo)
         }
 
 

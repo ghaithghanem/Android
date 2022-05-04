@@ -13,4 +13,7 @@
     <string name="google_icon">google icon</string>
     <string name="facebook_icon">facebook icon</string>
     <string name="new_user_register_now">New User? Register Now</string>
+    <string name="what_happened">What happened?</string>
+    <string name="i_found_something">I found something</string>
+    <string name="i_lost_something">I lost something</string>
 </resources>

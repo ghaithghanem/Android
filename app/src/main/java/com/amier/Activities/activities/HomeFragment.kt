@@ -20,8 +20,8 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_home, container, false)
 
-        view.recycler_viewAssociation.layoutManager = LinearLayoutManager(activity)
-        view.recycler_viewAssociation.setHasFixedSize(true)
+        view.home_found_rv.layoutManager = LinearLayoutManager(activity)
+        view.home_found_rv.setHasFixedSize(true)
         /*getNewsData { newss : List<New> ->
             view.recycler_viewAssociation.adapter = NewsViewAdapter(newss)
         }*/

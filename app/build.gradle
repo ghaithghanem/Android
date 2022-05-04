@@ -74,5 +74,10 @@ dependencies {
     //toast
     implementation 'com.github.Spikeysanju:MotionToast:1.4'
 
+    //fingerPrint
+    implementation("androidx.biometric:biometric:1.2.0-alpha03")
+
+
+
 
 }

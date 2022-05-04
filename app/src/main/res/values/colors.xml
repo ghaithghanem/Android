@@ -11,6 +11,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="headerTextColor">#ECE3E3</color>
+    <color name="grey">#E5E5E5</color>
+    <color name="green">#119D65</color>
+    <color name="red">#CD201F</color>
+    <color name="colorAccent1">#FB8B24</color>
+    <color name="colorBlackDisabled">#3e161616</color>
 
     <color name="location">#FFDFDF</color>
     <color name="home">#DADEFF</color>

@@ -1,14 +1,234 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.amier.Activities.activities.HomeFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:descendantFocusability="blocksDescendants"
+            android:paddingBottom="30dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@drawable/card_home"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/home_username"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginStart="20dp"
+                    android:text="Hello, User"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/what_happened"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:weightSum="2">
+                    <Button
+                        android:id="@+id/home_btn_found"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/i_found_something"
+                        android:textColor="@color/white"
+                        android:textAllCaps="false"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="5dp"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:background="@drawable/button_rounded_green"/>
+                    <Button
+                        android:id="@+id/home_btn_lost"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/i_lost_something"
+                        android:textColor="@color/white"
+                        android:textAllCaps="false"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="15dp"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:background="@drawable/button_rounded_red"/>
+                </LinearLayout>
+            </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+
+            <Button
+                android:id="@+id/home_btn_my_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:background="@drawable/button_rounded_gold"
+                android:text="My Post"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:fontFamily="@font/product_sans_regular"
+                android:textStyle="bold"/>
+
+
+            <LinearLayout
+                android:id="@+id/home_recently_found"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="15dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="Recently Found"
+
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/home_found_all_btn"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:background="@drawable/button_rounded_primary"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="SHOW ALL"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="SmallSp" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="80dp"
+                    android:text="The following items have recently been found, maybe the item you are looking for is one of them"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/product_sans_regular"
+                    android:textSize="12sp"/>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/home_found_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/home_recently_lost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="15dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Recently Lost"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/product_sans_regular"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+
+                    <Button
+                        android:id="@+id/home_lost_all_btn"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:background="@drawable/button_rounded_primary"
+                        android:fontFamily="@font/product_sans_regular"
+                        android:text="SHOW ALL"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        tools:ignore="SmallSp"
+                        tools:layout_editor_absoluteX="295dp"
+                        tools:layout_editor_absoluteY="0dp" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="80dp"
+                    android:text="The following items are recently lost, maybe the items you find are one of them "
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/product_sans_regular"
+                    android:textSize="12sp"/>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/home_lost_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/home_progress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:id="@+id/recycler_viewAssociation"/>
+        android:background="@color/colorBlackDisabled"
+        android:gravity="center"
+        android:visibility="gone">
 
-</LinearLayout>
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
