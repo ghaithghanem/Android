@@ -16,4 +16,10 @@
     <string name="what_happened">What happened?</string>
     <string name="i_found_something">I found something</string>
     <string name="i_lost_something">I lost something</string>
+
+    <string name="facebook_app_id">1638480973179895</string>
+    <string name="fb_login_protocol_scheme">fb1638480973179895</string>
+    <string name="facebook_client_token">902115fe2c1b13e5934843cc9f128de6</string>
+
+
 </resources>

@@ -144,8 +144,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
+        android:layout_width="354dp"
+        android:layout_height="41dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:orientation="horizontal"
@@ -158,16 +158,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:srcCompat="@drawable/google"
-            android:contentDescription="@string/google_icon" />
+            android:contentDescription="@string/google_icon"
+            app:srcCompat="@drawable/google" />
 
-        <ImageView
-            android:id="@+id/facebookLogin"
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebook_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/facebook"
-            android:contentDescription="@string/facebook_icon" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp" />
+
+
     </LinearLayout>
 
     <Button

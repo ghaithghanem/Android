@@ -61,15 +61,15 @@ class LastFragment : Fragment() {
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
                     Toast.makeText(
-                        view?.context, "Autentikasi gagal!",
+                        view?.context, "FingerPrint!",
                         Toast.LENGTH_SHORT)
                         .show()
                 }
             })
         promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("biometric check")
-            .setSubtitle("lakukan scan sidik jari untuk melanjutkan")
-            .setNegativeButtonText("gunakan password")
+            .setTitle("FingerPrint check")
+            .setSubtitle("fingerprint scan")
+            .setNegativeButtonText(" password")
             .build()
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_last, container, false)

@@ -78,6 +78,10 @@ dependencies {
     implementation("androidx.biometric:biometric:1.2.0-alpha03")
 
 
+    //Facebook login
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
+
+
 
 
 }

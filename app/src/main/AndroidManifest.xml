@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,12 +28,23 @@
         <activity
             android:name="com.amier.Activities.activities.ForgotPasswordActivity"
             android:exported="true" />
+
         <activity
-            android:name="com.amier.Activities.activities.SplashScreenActivity"
-            android:exported="true">
+            android:name="com.amier.Activities.activities.LoginActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:exported="true" />
+
+            <activity
+                android:name="com.amier.Activities.activities.SplashScreenActivity"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -41,9 +57,9 @@
         <activity
             android:name="com.amier.Activities.activities.RegisterActivity"
             android:exported="true" />
-        <activity
-            android:name="com.amier.Activities.activities.LoginActivity"
-            android:exported="true" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
     </application>
 
 </manifest>

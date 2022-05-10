@@ -16,14 +16,23 @@ import com.amier.Activities.models.User
 import com.amier.Activities.models.UserAndToken
 import com.amier.Activities.storage.SharedPrefManager
 import com.amier.modernloginregister.R
+import com.bumptech.glide.Glide
+import com.facebook.*
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import kotlinx.android.synthetic.main.item_email.*
+import kotlinx.android.synthetic.main.item_image.*
+import kotlinx.android.synthetic.main.item_image.nameUser
+import org.json.JSONObject
 
-
+@Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity() {
     lateinit var email: EditText
     lateinit var password: EditText
@@ -31,6 +40,9 @@ class LoginActivity : AppCompatActivity() {
     lateinit var mSharedPref: SharedPreferences
     lateinit var gotoRegister: Button
     lateinit var forgotPassword: Button
+    lateinit var mainBinding: LastFragment
+    lateinit var callbackManager: CallbackManager
+    private val EMAIL = "email"
     var loadingDialog = LoadingDialog()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -42,7 +54,44 @@ class LoginActivity : AppCompatActivity() {
       // }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+///////////facebook login
+        JavaHelper.printHashKey(this);
+        facebook_button.setOnClickListener {
+            facebook_button.setReadPermissions(listOf(EMAIL))
+            callbackManager = CallbackManager.Factory.create()
+            LoginManager.getInstance().registerCallback(callbackManager, object: FacebookCallback<LoginResult>{
 
+                override fun onCancel() {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onError(error: FacebookException) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onSuccess(result: LoginResult) {
+
+                    val graphRequest = GraphRequest.newMeRequest(result?.accessToken){`object`, response ->
+                        val intent = Intent(applicationContext, HomeActivity::class.java)
+                        startActivity(intent)
+                       getFacebookData(`object`)
+
+
+                    }
+                    val param = Bundle()
+                    param.putString("fields","name,email,id,profilePic.type(large)")
+                    graphRequest.parameters = param
+                    graphRequest.executeAsync()
+
+
+                }
+
+            })
+
+        }
+
+
+        //////////////////////////////////
         mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
         remember_me = findViewById(R.id.remember);
         email = findViewById(R.id.editTextEmail)
@@ -149,6 +198,23 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    private fun getFacebookData(obj: JSONObject?) {
+        val profilePic = "https://graph.facebook.com/${obj?.getString("id")}/picture?width=200&height200"
+        Glide.with(this).load(profilePic).into(mainBinding.imageUser)
+        val name = obj?.getString("name")
+        val email = obj?.getString("email")
+        mainBinding.nameUser.text = "NAME:${name}"
+        mainBinding.emailUser.text = "EMAIL:${email}"
+
+    }
+
+    /////facebooklogin
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        callbackManager.onActivityResult(requestCode,resultCode,data)
+    }
+////////////////////////
     override fun onStart() {
         super.onStart()
         if(SharedPrefManager.getInstance(this).isLoggedIn){
