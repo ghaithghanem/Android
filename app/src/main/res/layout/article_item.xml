@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/ArticleName"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@+id/ArticleImage"
@@ -57,16 +57,36 @@
             android:textSize="18sp" />
 
 
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ArticleDescription"
+            android:layout_marginStart="40dp"
+            android:layout_toEndOf="@id/Creation"
+            android:textSize="18sp"
+            android:text="TextView" />
 
-            <TextView
-                android:layout_toEndOf="@id/Creation"
-                android:id="@+id/textView9"
-                android:layout_below="@id/ArticleDescription"
-                android:layout_marginStart="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
 
+        <ImageView
+            android:id="@+id/question"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_marginRight="25dp"
+            android:layout_toLeftOf="@+id/report"
+            android:src="@drawable/ic_baseline_assignment_24" />
+
+        <ImageView
+            android:id="@+id/report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentEnd="true"
+            android:adjustViewBounds="true"
+            android:gravity="right"
+            android:src="@drawable/ic_baseline_outlined_flag_24" />
 
 
     </RelativeLayout>

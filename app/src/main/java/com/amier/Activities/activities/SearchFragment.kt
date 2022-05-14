@@ -27,11 +27,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.amier.Activities.activities.adapters.ArticleViewAdapter
 import com.amier.Activities.models.User
 
 
-class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
+class SearchFragment : Fragment() , ArticleViewAdapter.OnItemClickListener{
     lateinit var mSharedPref: SharedPreferences
+
 
     var filtredArticle: MutableList<Articles> = arrayListOf()
     var articlesDispo: MutableList<Articles> = arrayListOf()
@@ -52,7 +54,7 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
         getNewsData { newss: List<Articles> ->
             articlesDispo = newss as MutableList<Articles>
 
-            view.recyclerView.adapter = ArticleViewAdapter(newss, this)
+            view.recyclerView.adapter = ArticleViewAdapter(newss, this,context!!)
         }
         mSharedPref = view.context!!.getSharedPreferences("UserPref", Context.MODE_PRIVATE)
 
@@ -61,7 +63,9 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
 
             apiInterfacee.checkVerified(mSharedPref.getString("_id", "")!!)
                 .enqueue(object : Callback<User> {
+
                     override fun onResponse(call: Call<User>, response: Response<User>) {
+                        Log.i("reponse code user check",response.code().toString())
                         if (response.isSuccessful) {
                             if (response.body()!!.isVerified!!) {
                                 mSharedPref.edit()
@@ -82,6 +86,8 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
                 })
 
         }
+
+
         val ajouterArticleButton = view.findViewById<Button>(R.id.ajouterArticle)
 
         val lost = view.findViewById<TextView>(R.id.Lost)
@@ -89,6 +95,7 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
         val linearlayoutLost = view.findViewById<LinearLayout>(R.id.linearlayoutLost)
         val linearlayoutFound = view.findViewById<LinearLayout>(R.id.linearlayoutFound)
         val happy = view.findViewById<ImageView>(R.id.happy)
+        val report = view.findViewById<ImageView>(R.id.report)
         val sad = view.findViewById<ImageView>(R.id.sad)
         val searchBar = view.findViewById<TextInputLayout>(R.id.searchBar)
         val keyword = view.findViewById<TextInputEditText>(R.id.keyword)
@@ -109,14 +116,14 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
                             filtredArticle.add(it)
                         }
                     }
-                    view.recyclerView.adapter = ArticleViewAdapter(filtredArticle, test)
+                    view.recyclerView.adapter = ArticleViewAdapter(filtredArticle, test,context!!)
                 }
             }
             else {
                 sad.setImageResource(R.drawable.sad)
                 lost.setTextColor(Color.BLACK)
                 sadcheck = false
-                view.recyclerView.adapter = ArticleViewAdapter(articlesDispo, test)
+                view.recyclerView.adapter = ArticleViewAdapter(articlesDispo, test,context!!)
             }
 
         }
@@ -136,7 +143,7 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
                             filtredArticle.add(it)
                         }
                     }
-                    view.recyclerView.adapter = ArticleViewAdapter(filtredArticle, test)
+                    view.recyclerView.adapter = ArticleViewAdapter(filtredArticle, test,context!!)
                 }
 
             }
@@ -144,7 +151,7 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
                 happy.setImageResource(R.drawable.happy)
                 found.setTextColor(Color.BLACK)
                 happycheck = false
-                view.recyclerView.adapter = ArticleViewAdapter(articlesDispo, test)
+                view.recyclerView.adapter = ArticleViewAdapter(articlesDispo, test,context!!)
             }
         }
 
@@ -187,10 +194,10 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
                             filtredArticle.add(it)
                         }
                     }
-                    view.recyclerView.adapter = ArticleViewAdapter(filtredArticle, test)
+                    view.recyclerView.adapter = ArticleViewAdapter(filtredArticle, test,context!!)
                 }
                 if(s.isEmpty()){
-                    view.recyclerView.adapter = ArticleViewAdapter(articlesDispo, test)
+                    view.recyclerView.adapter = ArticleViewAdapter(articlesDispo, test,context!!)
                 }
                 searcha = s.toString()
             }
@@ -204,6 +211,7 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
 
         apiInterface.GetAllArticles().enqueue(object: Callback<Articles> {
             override fun onResponse(call: Call<Articles>, response: Response<Articles>) {
+                Log.i("reponse code ",response.code().toString())
                 if(response.code() == 200){
                     return callback(response.body()!!.articles!!)
                     Log.i("yessss", response.body().toString())
@@ -231,33 +239,40 @@ class SearchFragment : Fragment() ,ArticleViewAdapter.OnItemClickListener{
         builder.show()
     }
     override fun onItemClick(position: Int, articles: List<Articles>) {
-        val intent = Intent(activity, DetailArticle::class.java)
-        intent.putExtra("nom",articles[position].nom)
-        intent.putExtra("addresse",articles[position].addresse)
-        intent.putExtra("_id",articles[position]._id)
-        intent.putExtra("description",articles[position].description)
-        intent.putExtra("type",articles[position].type)
-        intent.putExtra("photo",articles[position].photo)
-        intent.putExtra("userArticleNom", articles[position].user?.nom)
-        intent.putExtra("userArticlePrenom", articles[position].user?.prenom)
-        intent.putExtra("userArticlePhoto", articles[position].user?.photoProfil)
-        intent.putExtra("userArticleEmail", articles[position].user?.email)
-        intent.putExtra("userDetail", articles[position].user?._id)
-        intent.putExtra("question", articles[position].question?._id)
-        intent.putExtra("tokenfbUser", articles[position].user?.tokenfb)
-        intent.putExtra("questionTitle", articles[position].question?.titre)
-        startActivity(intent)
-    }
 
+
+
+            val intent = Intent(activity, DetailArticle::class.java)
+            intent.putExtra("nom",articles[position].nom)
+
+            if(articles[position].addresse!!.isNotEmpty()){
+                intent.putExtra("lalti", articles[position].addresse?.get(0))
+                intent.putExtra("longi",articles[position].addresse?.get(1))
+            }
+            //intent.putExtra("addresse",articles[position].addresse)
+            intent.putExtra("_id",articles[position]._id)
+            intent.putExtra("description",articles[position].description)
+            intent.putExtra("type",articles[position].type)
+            intent.putExtra("photo",articles[position].photo)
+            intent.putExtra("userArticleNom", articles[position].user?.nom)
+            intent.putExtra("userArticlePrenom", articles[position].user?.prenom)
+            intent.putExtra("userArticlePhoto", articles[position].user?.photoProfil)
+            intent.putExtra("userArticleEmail", articles[position].user?.email)
+            intent.putExtra("userDetail", articles[position].user?._id)
+            intent.putExtra("question", articles[position].question?._id)
+            intent.putExtra("tokenfbUser", articles[position].user?.tokenfb)
+            intent.putExtra("questionTitle", articles[position].question?.titre)
+            startActivity(intent)
+
+
+    }
     override fun onResume() {
+        mSharedPref.edit().apply{
+            remove("lat")
+            remove("long")
+        }.apply()
         super.onResume()
-        view?.recyclerView?.layoutManager = LinearLayoutManager(activity)
-        view?.recyclerView?.setHasFixedSize(true)
-        getNewsData { newss: List<Articles> ->
-            articlesDispo = newss as MutableList<Articles>
-
-            view?.recyclerView?.adapter = ArticleViewAdapter(newss, this)
-        }
     }
+
 
 }

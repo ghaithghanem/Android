@@ -7,44 +7,49 @@
     tools:context="com.amier.Activities.activities.DetailUserArticle">
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="280dp"
-                app:cardCornerRadius="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginHorizontal="10dp"
-                android:elevation="10dp"
-                android:id="@+id/cardViewUser">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:id="@+id/imageUser"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewUser"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp"
 
-                android:layout_marginTop="40dp"
-                android:layout_gravity="center_horizontal"
-                app:civ_border_width="2dp"
-                app:civ_border_color="@color/templateButton"
-                android:src="@drawable/common_google_signin_btn_icon_dark"/>
+        android:elevation="10dp"
+        app:cardBackgroundColor="#6D97DF"
+        app:cardCornerRadius="20dp">
 
-            <TextView
-                android:layout_gravity="center"
-                android:id="@+id/userArticleNom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textColor="@color/black"
-                android:textSize="45dp"
-                android:layout_marginTop="65dp"
-                />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageUser"
+            android:layout_width="110dp"
+            android:elevation="25dp"
+            android:layout_height="110dp"
+            android:background="@drawable/white_oval"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/happy"
+            app:civ_border_color="@color/templateButton"
+            app:civ_border_width="5dp" />
 
-            <TextView
-                android:id="@+id/prenomUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="TextView"
-                android:layout_marginTop="240dp"/>
-            </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/userArticleNom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="65dp"
+            android:text="TextView"
+            android:textColor="@color/black"
+            android:textSize="45dp" />
+
+        <TextView
+            android:id="@+id/prenomUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="240dp"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="30dp"
+            />
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/voirProfilB"
@@ -71,6 +76,18 @@
             android:text="Les articles:"
             android:textColor="@color/black"
             android:textSize="22dp" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:scaleType="centerCrop"
+            android:id="@+id/animationNoArticle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_rawRes="@raw/nodata" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_viewArticleList"

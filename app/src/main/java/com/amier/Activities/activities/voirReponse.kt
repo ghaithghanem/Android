@@ -7,32 +7,36 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amier.Activities.SwipeGesture
-import com.amier.Activities.api.ApiArticle
+import com.amier.Activities.activities.adapters.ReponseViewAdapter
 import com.amier.Activities.api.ApiNotification
 import com.amier.Activities.api.ApiReponse
-import com.amier.Activities.models.Articles
 import com.amier.Activities.models.Reponse
 import com.amier.Activities.models.User
 import com.amier.modernloginregister.R
-import com.google.android.material.textfield.TextInputLayout
+import com.sendbird.android.GroupChannel
+import com.sendbird.android.GroupChannelParams
+import com.sendbird.android.SendBird
 import kotlinx.android.synthetic.main.activity_voir_article.*
 import kotlinx.android.synthetic.main.activity_voir_reponse.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class voirReponse : AppCompatActivity(),ReponseViewAdapter.OnItemClickListener {
+class voirReponse : AppCompatActivity(), ReponseViewAdapter.OnItemClickListener {
     lateinit var mSharedPref: SharedPreferences
     lateinit var idUser: String
+    lateinit var userArticleid: String
+
     lateinit var adap: ReponseViewAdapter
     lateinit var reponsesss: MutableList<Reponse>
+    private val EXTRA_CHANNEL_URL = "EXTRA_CHANNEL_URL"
+    var usersSB: MutableList<String> = arrayListOf()
+
     //lateinit var test: ArticleViewAdapter.OnItemClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +98,7 @@ class voirReponse : AppCompatActivity(),ReponseViewAdapter.OnItemClickListener {
                         val notif= User()
                         notif.tokenfb = intent.getStringExtra("tokenfbUser")
                         notif.nom = mSharedPref.getString("nom","")
-                        notif.type = "reponse"
+
                         Log.i("notif qu'on va envoyer est : ",notif.toString())
                         val apiInterface = ApiNotification.create()
                         apiInterface.pushNotif(notif).enqueue(object:
@@ -114,6 +118,8 @@ class voirReponse : AppCompatActivity(),ReponseViewAdapter.OnItemClickListener {
                             override fun onFailure(call: Call<User>, t: Throwable) {
                             }
                         })
+                        usersSB.add(archiveItem.user!!._id!!)
+                        createChannel(usersSB)
 
                     }
                 }
@@ -123,6 +129,26 @@ class voirReponse : AppCompatActivity(),ReponseViewAdapter.OnItemClickListener {
         val touchHelper = ItemTouchHelper(swipegesture)
         touchHelper.attachToRecyclerView(recyclerView2)
 
+    }
+    private fun createChannel(users: MutableList<String>) {
+        val params = GroupChannelParams()
+
+        val operatorId = ArrayList<String>()
+        params.setDistinct(true)
+        operatorId.add(SendBird.getCurrentUser().userId)
+
+        params.addUserIds(users)
+        params.setOperatorUserIds(operatorId)
+
+        GroupChannel.createChannel(params) { groupChannel, e ->
+            if (e != null) {
+                Log.e("TAG", e.message)
+            } else {
+                val intent = Intent(this, ChannelActivity::class.java)
+                intent.putExtra(EXTRA_CHANNEL_URL, groupChannel.url)
+                startActivity(intent)
+            }
+        }
     }
     private fun getAllData(idUser:String,callback: (MutableList<Reponse>) -> Unit){
         val apiInterface = ApiReponse.create()

@@ -12,7 +12,7 @@ data class SendBirdUser(
     var last_seen_at: Int? = null,
     var is_online: Boolean? = null,
     var access_token: String? = null,
-    var session_tokens: List<String>? = null,
-    var discovery_keys: List<String>? = null,
+    var session_tokens: MutableList<String>? = null,
+    var discovery_keys: MutableList<String>? = null,
 
 )

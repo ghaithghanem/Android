@@ -7,18 +7,20 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.amier.Activities.UserArticleListAdapter
+import com.airbnb.lottie.LottieAnimationView
+import com.amier.Activities.activities.adapters.UserArticleListAdapter
 import com.amier.Activities.api.ApiArticle
-import com.amier.Activities.api.ApiQuestion
 import com.amier.Activities.models.Articles
-import com.amier.Activities.models.Question
 import com.amier.modernloginregister.R
 import com.bumptech.glide.Glide
+import com.sendbird.android.GroupChannel
+import com.sendbird.android.GroupChannelParams
+import com.sendbird.android.SendBird
 import kotlinx.android.synthetic.main.activity_detail_user_article.*
 import kotlinx.android.synthetic.main.activity_register.*
 import retrofit2.Call
@@ -29,11 +31,15 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
     lateinit var mSharedPref: SharedPreferences
     lateinit var userArticleid: String
     lateinit var articleUser: MutableList<Articles>
+    lateinit var animationView: LottieAnimationView
+    private val EXTRA_CHANNEL_URL = "EXTRA_CHANNEL_URL"
+    var usersSB: MutableList<String> = arrayListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_user_article)
         mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
-
+        animationView = findViewById(R.id.animationNoArticle)
          userArticleid = intent.getStringExtra("id")
         val userArticleNom = intent.getStringExtra("nom")
         val userArticlePrenom = intent.getStringExtra("prenom")
@@ -51,7 +57,8 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
 
 
         repondreButton.setOnClickListener {
-            Log.i("","")
+            usersSB.add(userArticleid)
+            createChannel(usersSB)
         }
         recycler_viewArticleList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
         recycler_viewArticleList.setHasFixedSize(true)
@@ -59,6 +66,10 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
         getAllData{ articless : MutableList<Articles> ->
             if(articless.isEmpty()){
                 Articles.text = "Pas d'articles à afficher "
+                recycler_viewArticleList.visibility = View.GONE
+                animationView.visibility = View.VISIBLE
+                animationView.playAnimation()
+                animationView.loop(true)
             }
             recycler_viewArticleList.adapter = UserArticleListAdapter(articless,this)
 
@@ -67,9 +78,30 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
 
 
     }
+    private fun createChannel(users: MutableList<String>) {
+        val params = GroupChannelParams()
+
+        val operatorId = ArrayList<String>()
+        params.setDistinct(true)
+        operatorId.add(SendBird.getCurrentUser().userId)
+
+        params.addUserIds(users)
+        params.setOperatorUserIds(operatorId)
+
+        GroupChannel.createChannel(params) { groupChannel, e ->
+            if (e != null) {
+                Log.e("TAG", e.message)
+            } else {
+                val intent = Intent(this, ChannelActivity::class.java)
+                intent.putExtra(EXTRA_CHANNEL_URL, groupChannel.url)
+                startActivity(intent)
+            }
+        }
+    }
     private fun getAllData(callback: (MutableList<Articles>) -> Unit){
         val apiInterface = ApiArticle.create()
         val id = userArticleid
+        var articleRetour : MutableList<Articles>? =null
         apiInterface.GetArticlesByUser(id).enqueue(object:
             Callback<Articles> {
             override fun onResponse(
@@ -78,6 +110,11 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
             ) {
                 if(response.isSuccessful){
                     Log.i("onResponse goooood", response.body().toString())
+//                    response.body()!!.articles!!.forEach{
+//                        if (it.question != null){
+//                            articleRetour?.add(it)
+//                        }
+//                    }
                     return callback(response.body()!!.articles!!)
                 } else {
                     Log.i("OnResponse not good", response.body().toString())
@@ -91,7 +128,10 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
     override fun onItemClick(position: Int, articles: List<Articles>) {
         val intent = Intent(this@DetailUserArticle, DetailArticle::class.java)
         intent.putExtra("nom",articles[position].nom)
-        intent.putExtra("addresse",articles[position].addresse)
+        if(articles[position].addresse!!.isNotEmpty()){
+            intent.putExtra("longi", articles[position].addresse?.get(0))
+            intent.putExtra("lalti",articles[position].addresse?.get(1))
+        }
         intent.putExtra("_id",articles[position]._id)
         intent.putExtra("description",articles[position].description)
         intent.putExtra("type",articles[position].type)

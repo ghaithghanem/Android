@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,12 +13,37 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
+        android:text="Mes articles posté"
+        android:textSize="25dp" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:scaleType="centerCrop"
+        android:id="@+id/animationNoreponse"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="250dp"
+        android:layout_centerVertical="true"
+        app:lottie_rawRes="@raw/nodata" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_below="@+id/animationNoreponse"
+        android:id="@+id/messageReponse"
         android:textSize="25dp"
-        android:text="Mes articles posté" />
+        android:gravity="center"
+        android:padding="5dp"
+        android:textAlignment="center"
+        android:text="Pas d'article a afficher"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
 
+
         android:id="@+id/myArticleRV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mesarticles" />
+</RelativeLayout>

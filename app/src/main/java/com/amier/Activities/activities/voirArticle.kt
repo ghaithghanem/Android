@@ -7,46 +7,58 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.amier.Activities.SwipeGesture
-import com.amier.Activities.UserArticleListAdapter
+import com.amier.Activities.activities.adapters.ArticleViewAdapter
 import com.amier.Activities.api.ApiArticle
 import com.amier.Activities.models.Articles
-import com.amier.Activities.models.Reponse
 import com.amier.modernloginregister.R
 import kotlinx.android.synthetic.main.activity_detail_user_article.*
-import kotlinx.android.synthetic.main.activity_detail_user_article.recycler_viewArticleList
 import kotlinx.android.synthetic.main.activity_voir_article.*
+import kotlinx.android.synthetic.main.article_item.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class voirArticle : AppCompatActivity(),ArticleViewAdapter.OnItemClickListener {
+class voirArticle : AppCompatActivity(), ArticleViewAdapter.OnItemClickListener {
     lateinit var mSharedPref: SharedPreferences
     lateinit var idUser: String
     lateinit var articles: MutableList<Articles>
     lateinit var test: ArticleViewAdapter.OnItemClickListener
     lateinit var adap: ArticleViewAdapter
+    lateinit var tesxt: TextView
+    lateinit var animationView: LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
         idUser = mSharedPref.getString("_id","")!!
         setContentView(R.layout.activity_voir_article)
-
+        animationView = findViewById(R.id.animationNoreponse)
+        tesxt = findViewById(R.id.messageReponse)
         myArticleRV.layoutManager = LinearLayoutManager(this)
         myArticleRV.setHasFixedSize(true)
 
 
         getAllData(idUser){ articless : MutableList<Articles> ->
-            println(articless)
-            articles = articless
-            adap = ArticleViewAdapter(articles,this)
-            myArticleRV.adapter = ArticleViewAdapter(articless,this)
+            if(articless.isEmpty()){
+                println(articless)
+                articles = articless
+                adap = ArticleViewAdapter(articles,this,this)
+                myArticleRV.visibility = View.GONE
+                animationView.visibility = View.VISIBLE
+                tesxt.visibility = View.VISIBLE
+                animationView.playAnimation()
+                animationView.loop(true)
+            }
+
+            myArticleRV.adapter = ArticleViewAdapter(articless,this,this)
 
         }
 
@@ -102,6 +114,7 @@ class voirArticle : AppCompatActivity(),ArticleViewAdapter.OnItemClickListener {
                         }else{
                             val intent = Intent(applicationContext, voirReponse::class.java)
                             intent.putExtra("idArticle",articles[viewHolder.adapterPosition]._id)
+                            intent.putExtra("tokenfbUser",articles[viewHolder.adapterPosition].user!!.tokenfb)
                             intent.putExtra("question",articles[viewHolder.adapterPosition].question!!.titre!!)
                             startActivity(intent)
                         }
@@ -145,6 +158,7 @@ class voirArticle : AppCompatActivity(),ArticleViewAdapter.OnItemClickListener {
         intent.putExtra("nom",property[position].nom)
         intent.putExtra("description",property[position].description)
         intent.putExtra("type",property[position].type)
+        intent.putExtra("idArticle",property[position]._id)
         intent.putExtra("photoUser",property[position].user!!.photoProfil)
         intent.putExtra("nomUser",property[position].user!!.nom)
         //intent.putExtra("addresse","")
@@ -163,8 +177,8 @@ class voirArticle : AppCompatActivity(),ArticleViewAdapter.OnItemClickListener {
         getAllData(idUser){ articless : MutableList<Articles> ->
             println(articless)
             articles = articless
-            adap = ArticleViewAdapter(articles,this)
-            myArticleRV.adapter = ArticleViewAdapter(articless,this)
+            adap = ArticleViewAdapter(articles,this,this)
+            myArticleRV.adapter = ArticleViewAdapter(articless,this,this)
 
         }
     }

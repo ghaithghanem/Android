@@ -1,7 +1,9 @@
     package com.amier.Activities.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,8 +33,9 @@ import java.util.regex.Pattern
     private var selectedImageUri: Uri? = null
  var imagePicker: ImageView?=null
 private lateinit var fab: FloatingActionButton
-
+        lateinit var mSharedPref: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
+        mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
         SendBird.init("C2B86342-5275-4183-9F0C-28EF1E4B3014", this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -80,7 +83,7 @@ private lateinit var fab: FloatingActionButton
                 return@setOnClickListener
             }
             if (selectedImageUri == null) {
-                layout_root.snackbar("Select an Image First")
+
                 return@setOnClickListener
             }
 
@@ -133,6 +136,7 @@ private lateinit var fab: FloatingActionButton
         data["email"] = RequestBody.create(MultipartBody.FORM, email)
         data["password"] = RequestBody.create(MultipartBody.FORM, password)
         data["numt"] = RequestBody.create(MultipartBody.FORM, number)
+        data["tokenfb"] = RequestBody.create(MultipartBody.FORM, mSharedPref.getString("tokenfb", "")!!)
 
 
         if (profilePicture != null) {
@@ -145,8 +149,9 @@ private lateinit var fab: FloatingActionButton
                         Log.i("signup good", response.body().toString())
                         var userSendbird = SendBirdUser()
                         userSendbird.nickname = response.body()?.user?.prenom.toString()
+
                         userSendbird.profile_url = response.body()?.user?.photoProfil.toString()
-                        userSendbird.user_id = response.body()?.user?._id.toString()
+                        userSendbird.user_id = response.body()?.user?._id.toString() +"/"+response.body()?.user?.tokenfb.toString()
                         Log.i("photo de profil sendbird : ", userSendbird.profile_url!!)
                         apiInterface.sendBirdCreate(userSendbird).enqueue(object:
                             Callback<SendBirdUser>{

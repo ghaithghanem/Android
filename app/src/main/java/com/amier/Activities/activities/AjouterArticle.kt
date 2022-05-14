@@ -16,6 +16,7 @@ import android.widget.*
 import com.amier.Activities.api.Api
 import com.amier.Activities.api.ApiArticle
 import com.amier.Activities.api.ApiQuestion
+import com.amier.Activities.mapbos
 import com.amier.Activities.models.Articles
 import com.amier.Activities.models.Question
 import com.amier.Activities.models.SendBirdUser
@@ -74,6 +75,8 @@ class AjouterArticle : AppCompatActivity() {
         ou = findViewById(R.id.ou)
 
 
+        mSharedPref.edit().remove("lat").apply()
+        mSharedPref.edit().remove("long").apply()
 
         ajoutQuestion = findViewById(R.id.ajoutQuestion)
         valider = findViewById(R.id.AjouterArticleButton)
@@ -99,7 +102,7 @@ class AjouterArticle : AppCompatActivity() {
         }
 
        GpsArticle!!.setOnClickListener{
-           val intent = Intent(applicationContext, MapsActivity::class.java)
+           val intent = Intent(applicationContext, mapbos::class.java)
            intent.putExtra("type",type)
            startActivity(intent)
 
@@ -136,9 +139,6 @@ class AjouterArticle : AppCompatActivity() {
                 Log.d("le resultat est : ", resultat)
             } else {
                 if (validate()) {
-
-
-
                     val resultat = AjoutArticle(
                         titre,
                         questionEnvoye,
@@ -155,14 +155,7 @@ class AjouterArticle : AppCompatActivity() {
                             "Email ou Mot de passe incorrect",
                             Toast.LENGTH_LONG
                         ).show()
-                    } else if (resultat.contains("echec")) {
-                        val builder = AlertDialog.Builder(view!!.context)
-                        builder.setTitle("Alert")
-                        builder.setMessage("Verifier d'abord votre compte avec l'email envoyé!")
-
-                        builder.show()
                     }
-
 
                 }
             }
@@ -219,9 +212,9 @@ class AjouterArticle : AppCompatActivity() {
         if(question.isNotEmpty()){
             data["question"] = RequestBody.create(MultipartBody.FORM, question)
         }
-        if(intent.getStringExtra("lat") !=null){
-            data["lat"] = RequestBody.create(MultipartBody.FORM,intent.getStringExtra("lat")!!.toString())
-            data["long"] = RequestBody.create(MultipartBody.FORM,intent.getStringExtra("long")!!.toString())
+        if(mSharedPref.getString("lat","")!!.isNotEmpty()){
+            data["lat"] = RequestBody.create(MultipartBody.FORM,mSharedPref.getString("lat","")!!)
+            data["long"] = RequestBody.create(MultipartBody.FORM,mSharedPref.getString("long","")!!)
         }
         data["description"] = RequestBody.create(MultipartBody.FORM, description)
         data["type"] = RequestBody.create(MultipartBody.FORM, type)
@@ -303,9 +296,14 @@ class AjouterArticle : AppCompatActivity() {
         if(question.isNotEmpty()){
             data["question"] = RequestBody.create(MultipartBody.FORM, question)
         }
-        if(intent.getStringExtra("lat") !=null){
-            data["lat"] = RequestBody.create(MultipartBody.FORM,intent.getStringExtra("lat")!!.toString())
-            data["long"] = RequestBody.create(MultipartBody.FORM,intent.getStringExtra("long")!!.toString())
+
+        if(mSharedPref.getString("lat","") !=null){
+
+            println("heee hooo"+mSharedPref.getString("lat","")!!)
+            var addresse: MutableList<Double>? = ArrayList()
+            addresse!!.add(mSharedPref.getString("lat","")!!.toDouble())
+            addresse.add(mSharedPref.getString("long","")!!.toDouble())
+            data["addresse"] = RequestBody.create(MultipartBody.FORM,addresse.toString())
         }
         data["description"] = RequestBody.create(MultipartBody.FORM, description)
         data["type"] = RequestBody.create(MultipartBody.FORM, type)
