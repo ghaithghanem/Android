@@ -18,7 +18,8 @@ class SharedPrefManager private constructor(private val mCtx: Context){
                 sharedPreferences.getString("email", null),
                 sharedPreferences.getString("nom", null),
                 sharedPreferences.getString("prenom", null),
-                sharedPreferences.getString("photoProfil", null)
+                sharedPreferences.getString("photoProfil", null),
+                sharedPreferences.getString("tokenfb", null)
             )
         }
 
@@ -33,6 +34,7 @@ class SharedPrefManager private constructor(private val mCtx: Context){
         editor.putString("nom", user.nom)
         editor.putString("prenom", user.prenom)
         editor.putString("photoProfil", user.photoProfil)
+        editor.putString("tokenfb", user.tokenfb)
 
         editor.apply()
 
@@ -46,7 +48,7 @@ class SharedPrefManager private constructor(private val mCtx: Context){
     }
 
     companion object {
-        val SHARED_PREF_NAME = "my_shared_preff"
+        private val SHARED_PREF_NAME = "my_shared_preff"
         private var mInstance: SharedPrefManager? = null
         @Synchronized
         fun getInstance(mCtx: Context): SharedPrefManager {

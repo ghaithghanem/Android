@@ -8,9 +8,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.amier.Activities.api.Api
-import com.amier.Activities.models.EMAIL
-import com.amier.Activities.models.Email
-import com.amier.Activities.models.ForgotAndToken
+import com.amier.Activities.models.User
+
 import com.amier.modernloginregister.R
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,22 +35,22 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
 
         verif_email.setOnClickListener {
-            var emaill = Email()
+            var emaill = User()
             var emailreset = forgotemail.text.toString()
             emaill.email = emailreset
             val apiuser = Api.create().forgotpassword(emaill)
             loadingDialog.LoadingDialog(this)
-            apiuser.enqueue(object: Callback<ForgotAndToken>{
+            apiuser.enqueue(object: Callback<User>{
                 override fun onResponse(
-                    call: Call<ForgotAndToken>,
-                    response: Response<ForgotAndToken>
+                    call: Call<User>,
+                    response: Response<User>
                 ) {
                     if(response.isSuccessful){
-
+                        println(response.body()?.token)
                         MotionToast.darkColorToast(
                             this@ForgotPasswordActivity,
-                            "Good ",
-                            "Next step",
+                            "Email correct",
+                            "Prochaine étape",
                             MotionToastStyle.SUCCESS,
                             MotionToast.GRAVITY_TOP,
                             MotionToast.LONG_DURATION,
@@ -63,19 +62,19 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
                         val intent = Intent(applicationContext, resetActivity::class.java)
                         intent.apply {
-                            putExtra(EMAIL, emailreset)
+                            putExtra("email", emailreset)
                         }
                         startActivity(intent)
 
 
                     } else {
 
-                        Toast.makeText(applicationContext, "uncorrect email ", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "Email incorrect", Toast.LENGTH_LONG).show()
 
                     }
                 }
 
-                override fun onFailure(call: Call<ForgotAndToken>, t: Throwable) {
+                override fun onFailure(call: Call<User>, t: Throwable) {
                     Toast.makeText(applicationContext, "erreur server", Toast.LENGTH_LONG).show()
                 }
 

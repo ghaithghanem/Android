@@ -10,15 +10,15 @@
         android:title="Association" />
     <item
         android:id="@+id/nav_location"
-        android:icon="@drawable/ic_location"
+        android:icon="@drawable/ic_baseline_message_24"
         android:title="Discussion" />
     <item
         android:id="@+id/nav_search"
-        android:icon="@drawable/ic_base_location"
+        android:icon="@drawable/ic_baseline_search_24"
         android:title="LostAndFound" />
     <item
         android:id="@+id/nav_last"
-        android:icon="@drawable/ic_zoom"
+        android:icon="@drawable/ic_person"
         android:title="Profile" />
 
 </menu>

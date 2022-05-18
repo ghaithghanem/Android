@@ -20,7 +20,15 @@ import com.amier.Activities.storage.SharedPrefManager
 import com.amier.modernloginregister.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_last.view.*
+import kotlinx.android.synthetic.main.item_image.view.*
 import java.util.concurrent.Executor
+import androidx.annotation.NonNull
+import com.amier.Activities.activities.voirArticle
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+
+import com.google.android.gms.tasks.OnCompleteListener
+import kotlinx.android.synthetic.main.item_image.*
 
 
 class LastFragment : Fragment() {
@@ -33,12 +41,14 @@ class LastFragment : Fragment() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private lateinit var B1: Button
-    private lateinit var edit: Button
+    private lateinit var edit: TextView
     private lateinit var deco: ImageButton
+    private lateinit var test: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         executor = ContextCompat.getMainExecutor(requireContext())
         biometricPrompt = BiometricPrompt(this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
@@ -61,15 +71,15 @@ class LastFragment : Fragment() {
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
                     Toast.makeText(
-                        view?.context, "FingerPrint!",
+                        view?.context, "Autentikasi gagal!",
                         Toast.LENGTH_SHORT)
                         .show()
                 }
             })
         promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("FingerPrint check")
-            .setSubtitle("fingerprint scan")
-            .setNegativeButtonText(" password")
+            .setTitle("biometric check")
+            .setSubtitle("lakukan scan sidik jari untuk melanjutkan")
+            .setNegativeButtonText("gunakan password")
             .build()
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_last, container, false)
@@ -79,26 +89,33 @@ class LastFragment : Fragment() {
         val picStr: String = mSharedPref.getString("photoProfil", "user.email").toString()
         Glide.with(this).load(Uri.parse(picStr)).into(pic)
 
-
+        view.voirArticle.setOnClickListener {
+            val intent = Intent(view.context, com.amier.Activities.activities.voirArticle::class.java)
+            startActivity(intent)
+        }
         emailnameProfile = view.findViewById<TextView?>(R.id.nameUser)
-        val emailStr: String = mSharedPref.getString("nom", "user.email").toString()
+        val emailStr: String = mSharedPref.getString("nom", "user.Name").toString()
         emailnameProfile.text = emailStr
 
 
         usernameProfile = view.findViewById<TextView?>(R.id.emailUser)
-        val nameStr: String = mSharedPref.getString("email", "user.email").toString()
+        val nameStr: String = mSharedPref.getString("email", "example@Xmail.com").toString()
         usernameProfile.text = nameStr
 
 
         deco = view.findViewById<ImageButton?>(R.id.deco)
+
         deco.setOnClickListener {
             val builder = AlertDialog.Builder(view.context)
-            builder.setTitle("Logout")
-            builder.setMessage("logout")
+
+            builder.setTitle("Déconnexion")
+            builder.setMessage("Vous êtes sur de vouloir vous déconnecter")
             builder.setPositiveButton("Yes"){ dialogInterface, which ->
                 requireActivity().getSharedPreferences("UserPref", AppCompatActivity.MODE_PRIVATE).edit().clear().apply()
-                //finish()
+                requireActivity().finish()
+                signOut()
                 val intent = Intent(requireActivity().applicationContext, LoginActivity::class.java)
+
                 startActivity(intent)
             }
             builder.setNegativeButton("No"){dialogInterface, which ->
@@ -107,18 +124,22 @@ class LastFragment : Fragment() {
             builder.create().show()
         }
 
-        edit = view.findViewById<Button?>(R.id.edit)
+        edit = view.findViewById(R.id.edit)
         edit.setOnClickListener {
-            //val intent = Intent(requireContext(), UpdateActivity::class.java)
-            //startActivity(intent)
-            biometricPrompt.authenticate(promptInfo)
+            val intent = Intent(requireContext(), UpdateActivity::class.java)
+            startActivity(intent)
+           // biometricPrompt.authenticate(promptInfo)
         }
 
 
 
         phone = view.findViewById<TextView?>(R.id.phone)
-        val phoneStr: String = mSharedPref.getString("numt", "user.email").toString()
-        phone.text = phoneStr
+        val phoneStr: String = mSharedPref.getString("numt", "+xx-xxx-xxx").toString()
+        if(phoneStr.equals("null")){
+            phone.text = "Pas de numéro communiqué"
+        }else{
+            phone.text = phoneStr
+        }
 /*val menu = view.findViewById<ImageView>(R.id.menu_dropDown)
 menu.setOnClickListener {
     val popupMenu: PopupMenu = PopupMenu(requireContext(), menu)
@@ -151,9 +172,19 @@ menu.setOnClickListener {
 return view
 }
 
+    private fun signOut() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        val mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso).signOut().addOnCompleteListener {
+            println("sign out google : " +it.result)
+        }
 
-private fun navigateToCompanyProfile() {
-val intent = Intent(requireContext(), LastFragment::class.java)
-startActivity(intent)
-}
+    }
+
+
+    private fun navigateToCompanyProfile() {
+    val intent = Intent(requireContext(), LastFragment::class.java)
+    startActivity(intent)
+        }
 }

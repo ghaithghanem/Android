@@ -56,11 +56,12 @@
                     android:weightSum="3">
 
                     <TextView
+                        android:id="@+id/test"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Personal Info"
+                        android:text="Info Personnelles"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -71,11 +72,12 @@
                         android:background="#79D6D1D1" />
 
                     <TextView
+                        android:id="@+id/voirArticle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Family"
+                        android:text="Mes articles"
                         android:textColor="#636262"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -85,14 +87,14 @@
                         android:layout_height="match_parent"
                         android:background="#79D6D1D1" />
 
-                    <Button
+                    <TextView
                         android:id="@+id/edit"
                         android:layout_width="0dp"
                         android:layout_height="38dp"
                         android:layout_weight="1"
                         android:backgroundTint="#F5FFFFFF"
                         android:gravity="center"
-                        android:text="Edit Profile"
+                        android:text="Modifier profil"
                         android:textColor="#636262"
                         android:textSize="14sp"
                         android:textStyle="bold" />

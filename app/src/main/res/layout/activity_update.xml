@@ -87,7 +87,7 @@
         android:drawableStart="@drawable/ic_email"
         android:drawablePadding="16dp"
         android:ems="10"
-        android:hint="@string/email"
+        android:hint="Email"
         android:inputType="textEmailAddress"
         android:padding="16dp"
         app:layout_constraintStart_toStartOf="parent"

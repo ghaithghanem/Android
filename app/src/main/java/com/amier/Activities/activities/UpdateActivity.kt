@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -16,13 +17,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.amier.Activities.api.Api
-import com.amier.Activities.models.userSignUpResponse
-import com.amier.Activities.models.userUpdateResponse
+import com.amier.Activities.models.User
+
 import com.amier.Activities.storage.SharedPrefManager
 import com.amier.modernloginregister.R
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_register.view.*
 import kotlinx.android.synthetic.main.activity_update.*
@@ -36,11 +38,13 @@ import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
 
 class UpdateActivity : AppCompatActivity() {
-    lateinit var _id: String
+    lateinit var id: String
     lateinit var Name: EditText
     lateinit var Name1: EditText
     lateinit var Email: EditText
     lateinit var Num: EditText
+    lateinit var layout: Layout
+
     lateinit var profileimage1: ImageView
     lateinit var mSharedPref: SharedPreferences
     private var selectedImageUri: Uri? = null
@@ -50,7 +54,8 @@ class UpdateActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update)
-        mSharedPref = getSharedPreferences("UserPref", MODE_PRIVATE)
+
+        mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
         profileimage1 = findViewById<ImageView?>(R.id.profileimage1)
         val picStr: String = mSharedPref.getString("photoProfil", "").toString()
         Glide.with(this).load(Uri.parse(picStr)).into(profileimage1)
@@ -111,55 +116,52 @@ class UpdateActivity : AppCompatActivity() {
                 Num.requestFocus()
                 return@setOnClickListener
             }
-            if (selectedImageUri == null) {
-                layout_root.snackbar("Select an Image First")
-                return@setOnClickListener
+            if (selectedImageUri != null) {
+                //Snackbar.make(layout_root, "Select an Image First", Snackbar.LENGTH_SHORT).show()
+                //return@setOnClickListener
+                val parcelFileDescriptor =
+                    contentResolver.openFileDescriptor(selectedImageUri!!, "r", null) ?: return@setOnClickListener
             }
 
 
-            val parcelFileDescriptor =
-                contentResolver.openFileDescriptor(selectedImageUri!!, "r", null) ?: return@setOnClickListener
-           _id = mSharedPref.getString("id", "user.id").toString()
-            println("66666666666666666666666666666")
 
-println(_id)
+            id = mSharedPref.getString("_id", "user.id").toString()
+
 
             update(
                 name,name1,
                 email,
                 num,
-                _id
+                id
             )
-            print(parcelFileDescriptor);
 
         }
     }
 
     private fun update(firstName: String, lastName: String, email: String, number: String,id: String){
 
-        if(selectedImageUri == null){
-            println("image null")
+         var profilePicture:
+                MultipartBody.Part?=null
 
-            return
-        }
-
-        val id1 = _id;
         //id1 = mSharedPref.getString("id", "user.id").toString();
-        println("9999999999999999999999999999999999999999999")
-        println(id1);
-        val stream = contentResolver.openInputStream(selectedImageUri!!)
-        val request =
-            stream?.let { RequestBody.create("image/*".toMediaTypeOrNull(), it.readBytes()) } // read all bytes using kotlin extension
-        val profilePicture = request?.let {
-            MultipartBody.Part.createFormData(
-                "photoProfil",
-                "image.jpeg",
-                it
-            )
+        if (selectedImageUri != null) {
+            val stream = contentResolver.openInputStream(selectedImageUri!!)
+            val request =
+                stream?.let {
+                    RequestBody.create(
+                        "image/*".toMediaTypeOrNull(),
+                        it.readBytes()
+                    )
+                } // read all bytes using kotlin extension
+             profilePicture = request?.let {
+                MultipartBody.Part.createFormData(
+                    "photoProfil",
+                    "image.jpeg",
+                    it
+                )
+            }
         }
 
-
-        Log.d("MyActivity", "on finish upload file")
 
 
         val apiInterface = Api.create()
@@ -170,13 +172,13 @@ println(_id)
         data["email"] = RequestBody.create(MultipartBody.FORM, email)
         data["numt"] = RequestBody.create(MultipartBody.FORM, number)
 
-        if (profilePicture != null) {
-            apiInterface.userUpdate(_id,data,profilePicture).enqueue(object:
-                Callback<userUpdateResponse> {
+            apiInterface.userUpdate(id,data,profilePicture).enqueue(object:
+                Callback<User> {
                 override fun onResponse(
-                    call: Call<userUpdateResponse>,
-                    response: Response<userUpdateResponse>
+                    call: Call<User>,
+                    response: Response<User>
                 ) {
+                    println(response.message())
                     if(response.isSuccessful){
                         Log.i("onResponse goooood", response.body().toString())
 
@@ -196,7 +198,7 @@ println(_id)
                         mSharedPref.edit().apply{
 
                             putString("photoProfil", response.body()?.user?.photoProfil.toString())
-                            putString("id", response.body()?.user?._id.toString())
+                            putString("_id", response.body()?.user?._id.toString())
                             putString("nom", response.body()?.user?.nom.toString())
                             putString("email", response.body()?.user?.email)
                             putString("password", response.body()?.user?.password)
@@ -218,13 +220,13 @@ println(_id)
                     }
                 }
 
-                override fun onFailure(call: Call<userUpdateResponse>, t: Throwable) {
+                override fun onFailure(call: Call<User>, t: Throwable) {
                     progress_bar1.progress = 0
                     println("noooooooooooooooooo")
                 }
 
             })
-        }
+
     }
     override fun onStart() {
         super.onStart()
@@ -246,6 +248,6 @@ println(_id)
 }
 
 
-private fun Unit.enqueue(callback: Callback<userUpdateResponse>) {
+private fun Unit.enqueue(callback: Callback<User>) {
 
 }

@@ -19,6 +19,7 @@ import www.sanju.motiontoast.MotionToastStyle
 
 class resetActivity : AppCompatActivity() {
     lateinit var verif_token: Button
+    lateinit var email: String
     lateinit var forgottoken: EditText
     //lateinit var forgotemail: EditText
     lateinit var newpass: EditText
@@ -29,59 +30,58 @@ class resetActivity : AppCompatActivity() {
         verif_token = findViewById(R.id.verif_token)
         forgottoken = findViewById(R.id.forgottoken)
         newpass = findViewById(R.id.newpass)
+        email = intent.getStringExtra("email")!!
 
 
         verif_token.setOnClickListener {
 
-         val verif1 = TokenReset()
-            verif1.token = forgottoken.text.toString().toInt()
-        val password1 = passreset()
-            password1.Password = newpass.text.toString()
-val email1 = Email()
-            val name = intent.getStringExtra(EMAIL)
-            email1.email = name
-println( password1)
-println(name)
-            println(verif1)
-
-            val apiuser = Api.create().resetpassword(name,forgottoken.text.toString().toInt(),password1)
-            apiuser.enqueue(object: Callback<res> {
-                override fun onResponse(
-                    call: Call<res>,
-                    response: Response<res>
-                ) {
-                    if(response.isSuccessful){
+            if(newpass.text.toString().isNotEmpty()){
+                val user = User()
+                user.password = newpass.text.toString()
+                val apiuser = Api.create().resetpassword(email,forgottoken.text.toString(),user)
+                apiuser.enqueue(object: Callback<User> {
+                    override fun onResponse(
+                        call: Call<User>,
+                        response: Response<User>
+                    ) {
+                        if(response.isSuccessful){
 
 
-                        MotionToast.darkColorToast(
-                            this@resetActivity,
-                            "Good ",
-                            "Success reset Password",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_TOP,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(
+                            MotionToast.darkColorToast(
                                 this@resetActivity,
-                                www.sanju.motiontoast.R.font.helvetica_regular
+                                "Good ",
+                                "Success reset Password",
+                                MotionToastStyle.SUCCESS,
+                                MotionToast.GRAVITY_TOP,
+                                MotionToast.LONG_DURATION,
+                                ResourcesCompat.getFont(
+                                    this@resetActivity,
+                                    www.sanju.motiontoast.R.font.helvetica_regular
+                                )
                             )
-                        )
-                        val intent = Intent(applicationContext, LoginActivity::class.java)
+                            val intent = Intent(applicationContext, LoginActivity::class.java)
 
-                        startActivity(intent)
+                            startActivity(intent)
 
 
-                    } else {
+                        } else {
 
-                        Toast.makeText(applicationContext, "uncorrect email ", Toast.LENGTH_LONG).show()
-                        Log.i("PASSSSS_API_RESPONSE", response.toString())
+                            Toast.makeText(applicationContext, "Code incorrect", Toast.LENGTH_LONG).show()
+
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<res>, t: Throwable) {
-                    Toast.makeText(applicationContext, "erreur server", Toast.LENGTH_LONG).show()
-                }
+                    override fun onFailure(call: Call<User>, t: Throwable) {
+                        Toast.makeText(applicationContext, "erreur server", Toast.LENGTH_LONG).show()
+                    }
 
-            })
+                })
+            }
+            else{
+                Toast.makeText(applicationContext, "Mot de passe obligatoire", Toast.LENGTH_LONG).show()
+            }
+
+
 
 
         }

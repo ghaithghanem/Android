@@ -47,7 +47,8 @@
             android:text="malakinfoapp@gmail.com"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+           android:textStyle="bold" />
+
 
 
 
