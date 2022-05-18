@@ -14,7 +14,7 @@ Our application is name Lost & Found and is developped in Swift for The client a
 
 ## Links
 
-- [Mini Project](https://github.com/ghaithghanem/Android)
+- [Mini Project](https://github.com/mohamedmmc/LostAndFound)
 - [Backend] (https://github.com/mohamedmmc/LostAndFound-Back)
 - [AndoidStudio] (https://developer.android.com/)
 
