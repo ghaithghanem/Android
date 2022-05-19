@@ -235,7 +235,7 @@ class LoginActivity : AppCompatActivity() {
 
 
     }
-
+/////facebooklogin
 //    private fun getFacebookData(obj: JSONObject?) {
 //        val profilePic = "https://graph.facebook.com/${obj?.getString("id")}/picture?width=200&height200"
 //        Glide.with(this).load(profilePic).into(mainBinding.imageUser)
@@ -261,7 +261,7 @@ class LoginActivity : AppCompatActivity() {
         return  a
     }
 
-    /////facebooklogin
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -319,7 +319,7 @@ class LoginActivity : AppCompatActivity() {
 
                     } else if (response.code() == 404) {
 
-                        createAccount(account.givenName.toString(),account.familyName.toString(),account.email.toString(),null,null)
+                        createAccount(account.givenName.toString(),account.familyName.toString(),account.email.toString(),null,null,account.photoUrl.toString())
                         mSharedPref.edit().putBoolean("remember",true)
                         val intent = Intent(applicationContext, HomeActivity::class.java)
                         if(connectToSendBird(mSharedPref.getString("_id","")!!)){
@@ -351,7 +351,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun createAccount(firstName: String, lastName: String, email: String, password: String?, number: String?){
+    fun createAccount(firstName: String, lastName: String, email: String, password: String?, number: String?,photo:String?){
 
 
 
@@ -362,6 +362,9 @@ class LoginActivity : AppCompatActivity() {
         data["prenom"] = RequestBody.create(MultipartBody.FORM, lastName)
         data["email"] = RequestBody.create(MultipartBody.FORM, email)
         data["tokenfb"] = RequestBody.create(MultipartBody.FORM, mSharedPref.getString("tokenfb", "")!!)
+        if(photo != null){
+            data["photo"] = RequestBody.create(MultipartBody.FORM, photo)
+        }
         if(password != null){
             data["password"] = RequestBody.create(MultipartBody.FORM, password)
             data["numt"] = RequestBody.create(MultipartBody.FORM, number!!)
