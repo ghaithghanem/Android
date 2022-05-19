@@ -25,26 +25,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_gravity="center_horizontal"/>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:padding="5dp"
-        android:layout_height="wrap_content"
-        android:text="Lost"
-        android:textSize="22sp"
-        android:textColor="@color/black"
         android:id="@+id/articleTypee"
-        android:gravity="center"
-        android:layout_marginTop="180dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="180dp"
         android:background="@drawable/border"
-        />
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Lost"
+        android:textColor="@color/black"
+        android:textSize="22sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="title"
         android:textSize="22sp"
-        android:textColor="@color/black"
+        android:textColor="#D77345C5"
         android:id="@+id/articleTitlee"
         android:layout_marginTop="220dp"
         android:gravity="center"
@@ -56,6 +56,7 @@
         android:layout_height="wrap_content"
         android:text="20/12/2021"
         android:textSize="20sp"
+        android:textColor="#E4009688"
         android:id="@+id/articleCreationDate"
         android:layout_marginTop="260dp"
         android:gravity="center"

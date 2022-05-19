@@ -47,10 +47,14 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
 import android.widget.TextView
+import com.facebook.*
+import com.facebook.appevents.AppEventsLogger
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 
 import com.sendbird.android.constant.StringSet.core
-
-
+import java.util.*
+import kotlin.collections.LinkedHashMap
 
 
 @Suppress("DEPRECATION")
@@ -66,7 +70,11 @@ class LoginActivity : AppCompatActivity() {
     lateinit var forgotPassword: Button
     lateinit var mainBinding: LastFragment
     private val EMAIL = "email"
+    lateinit var Pref: SharedPreferences
+    lateinit var callbackManager : CallbackManager
     var loadingDialog = LoadingDialog()
+    lateinit var FacebookButton: LoginButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -74,43 +82,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         SendBird.init("C2B86342-5275-4183-9F0C-28EF1E4B3014", this)
         mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
-
-///////////facebook login
-//        facebook_button.height = 25
-//        JavaHelper.printHashKey(this);
-//        facebook_button.setOnClickListener {
-//            facebook_button.setReadPermissions(listOf(EMAIL))
-//            callbackManager = CallbackManager.Factory.create()
-//            LoginManager.getInstance().registerCallback(callbackManager, object: FacebookCallback<LoginResult>{
-//
-//                override fun onCancel() {
-//                    TODO("Not yet implemented")
-//                }
-//
-//                override fun onError(error: FacebookException) {
-//                    TODO("Not yet implemented")
-//                }
-//
-//                override fun onSuccess(result: LoginResult) {
-//
-//                    val graphRequest = GraphRequest.newMeRequest(result?.accessToken){`object`, response ->
-//                        val intent = Intent(applicationContext, HomeActivity::class.java)
-//                        startActivity(intent)
-//                        getFacebookData(`object`)
-//
-//
-//                    }
-//                    val param = Bundle()
-//                    param.putString("fields","name,email,id,profilePic.type(large)")
-//                    graphRequest.parameters = param
-//                    graphRequest.executeAsync()
-//
-//
-//                }
-//
-//            })
-
-   //     }
+        FacebookButton = findViewById(R.id.btnFacebook)
+        FacebookButton.setReadPermissions(
+            Arrays.asList(
+            "public_profile", "email"));
 
 
         //////////////////////////////////
@@ -142,6 +117,55 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, RegisterActivity::class.java)
             startActivity(intent)
         }
+
+
+        ///fb
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+        callbackManager = CallbackManager.Factory.create();
+        val accessToken = AccessToken.getCurrentAccessToken()
+        val isLoggedIn = accessToken != null && !accessToken.isExpired
+        callbackManager = CallbackManager.Factory.create()
+        FacebookButton.registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
+
+            override fun onCancel() {
+                Toast.makeText(applicationContext, "batlanaaaa", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onError(error: FacebookException) {
+                Toast.makeText(applicationContext, "5leeeet", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onSuccess(result: LoginResult) {
+
+
+                val graphRequest = GraphRequest.newMeRequest(result?.accessToken){ `object`, response ->
+
+                    println(response);
+                    println("666666666666666666666666666");
+                    // println(`object`);
+                    getFacebookData1(`object`)
+
+
+
+                    val intent = Intent(applicationContext, HomeActivity::class.java)
+                    startActivity(intent)
+
+                }
+
+                val param = Bundle()
+                param.putString("fields","name,email,id")
+                graphRequest.parameters = param
+                graphRequest.executeAsync()
+
+                Toast.makeText(applicationContext, "mrigel ya star", Toast.LENGTH_LONG).show()
+
+            }
+
+
+        })
+
+
         buttonLogin.setOnClickListener {
 
 
@@ -319,16 +343,9 @@ class LoginActivity : AppCompatActivity() {
 
                     } else if (response.code() == 404) {
 
+
                         createAccount(account.givenName.toString(),account.familyName.toString(),account.email.toString(),null,null,account.photoUrl.toString())
-                        mSharedPref.edit().putBoolean("remember",true)
-                        val intent = Intent(applicationContext, HomeActivity::class.java)
-                        if(connectToSendBird(mSharedPref.getString("_id","")!!)){
-                            Log.i("sendbird connecté :","")
-                        }else{
-                            Log.i("sendbird moch connecté :","")
-                        }
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
+
                     }else{
 //                        loadingDialog.dismissDialog()
                         Toast.makeText(applicationContext, "Email ou Mot de passe incorrect", Toast.LENGTH_LONG).show()
@@ -352,6 +369,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun createAccount(firstName: String, lastName: String, email: String, password: String?, number: String?,photo:String?){
+
 
 
 
@@ -402,6 +420,15 @@ class LoginActivity : AppCompatActivity() {
                             call: Call<SendBirdUser>,
                             response: Response<SendBirdUser>
                         ) {
+                            mSharedPref.edit().putBoolean("remember",true)
+                            val intent = Intent(applicationContext, HomeActivity::class.java)
+                            if(connectToSendBird(mSharedPref.getString("_id","")!!)){
+                                Log.i("sendbird connecté :","")
+                            }else{
+                                Log.i("sendbird moch connecté :","")
+                            }
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
                             Log.i("server reponse sendbird good: ",response.body().toString())
                         }
                         override fun onFailure(call: Call<SendBirdUser>, t: Throwable) {
@@ -489,6 +516,34 @@ class LoginActivity : AppCompatActivity() {
 //        }
     }
 
+    private fun getFacebookData1(obj: JSONObject?) {
+        mSharedPref = getSharedPreferences("UserPref", Context.MODE_PRIVATE)
+        //val profilePic = "https://graph.facebook.com/${obj?.getString("id")}/picture?width=200&height200"
+        //Glide.with(this).load(profilePic).into(mainBinding.imageUser)
+        val name = obj?.getString("name")
+        val emaill = obj?.getString("email")
+        val id = obj?.getString("id")
+        val imagefacebook = "https://graph.facebook.com/" + id + "/picture?type=large"
+
+        println("000000000000000000000000000000000");
+        println(name);
+
+        println(emaill);
+        println(id);
+        println(imagefacebook);
+        mSharedPref.edit().apply{
+            putString("nom", name);
+            putString("email", emaill);
+            putString("id", id);
+            putString("photoProfil", imagefacebook);
+
+        }.apply()
+
+        println(obj?.getString("email"));
+//        val profilePic = obj!!.getJSONObject("picture").getJSONObject("data").getString("url");
+        // println(profilePic.toString())
+
+    }
 
     private fun navigate(){
         val intent = Intent(applicationContext, HomeActivity::class.java)
@@ -504,6 +559,28 @@ class LoginActivity : AppCompatActivity() {
                 return
             }
         }
+    }
+
+
+    fun saveFacebookUserInfo(
+        first_name: String,
+        last_name: String,
+        email: String,
+        gender: String,
+        profileURL: String
+    ) {
+        Pref = getSharedPreferences("facebook", Context.MODE_PRIVATE)
+        val editor = Pref.edit()
+        editor.putString("fb_first_name", first_name)
+        editor.putString("fb_last_name", last_name)
+        editor.putString("fb_email", email)
+        editor.putString("fb_gender", gender)
+        editor.putString("fb_profileURL", profileURL)
+        editor.apply() // This line is IMPORTANT !!!
+        Log.d(
+            "MyApp",
+            "Shared Name : $first_name\nLast Name : $last_name\nEmail : $email\nGender : $gender\nProfile Pic : $profileURL"
+        )
     }
 
 }

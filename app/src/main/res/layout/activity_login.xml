@@ -169,18 +169,19 @@
                 android:layout_weight="1.0"
                 />
 
-<!--            <com.facebook.login.widget.LoginButton-->
-<!--                android:id="@+id/facebook_button"-->
-<!--                android:layout_width="0.0dip"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:textSize="15sp"-->
-<!--                android:textAlignment="center"-->
-<!--                xmlns:facebook="http://schemas.android.com/apk/res-auto"-->
-<!--                facebook:com_facebook_login_text="Connexion Facebook"-->
-<!--                android:paddingTop="15sp"-->
-<!--            android:paddingBottom="15sp"-->
-<!--                android:layout_weight="1.0"-->
-<!--                 />-->
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/btnFacebook"
+                android:layout_width="0.0dip"
+                android:layout_height="50dp"
+                android:textSize="15sp"
+                android:textAlignment="center"
+                xmlns:facebook="http://schemas.android.com/apk/res-auto"
+                facebook:com_facebook_login_text="Connexion Facebook"
+                android:paddingTop="15sp"
+                android:paddingBottom="15sp"
+                android:layout_weight="1.0"
+                 />
+
 
         </LinearLayout>
 

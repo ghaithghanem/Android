@@ -16,14 +16,15 @@
 
     <RelativeLayout
         android:id="@+id/article"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="139dp"
+
         android:padding="16dp">
 
         <ImageView
             android:id="@+id/ArticleImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp" />
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
 
         <TextView
             android:id="@+id/ArticleName"
@@ -32,6 +33,7 @@
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@+id/ArticleImage"
             android:text="Title"
+            android:textColor="#D77345C5"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -53,7 +55,9 @@
             android:layout_below="@id/ArticleDescription"
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@+id/ArticleImage"
+            android:shadowColor="#08A698"
             android:text="creation"
+            android:textColor="#E4009688"
             android:textSize="18sp" />
 
 
@@ -64,8 +68,8 @@
             android:layout_below="@id/ArticleDescription"
             android:layout_marginStart="40dp"
             android:layout_toEndOf="@id/Creation"
-            android:textSize="18sp"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textSize="18sp" />
 
 
         <ImageView

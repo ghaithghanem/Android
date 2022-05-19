@@ -20,20 +20,27 @@
         android:id="@+id/associationImage"
         android:layout_marginStart="20dp"
         android:layout_gravity="center_vertical"/>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="article Title"
         android:id="@+id/associationNom"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="30dp"/>
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="12345678"
-        android:id="@+id/associationNumTel"
         android:layout_marginStart="200dp"
-        android:layout_marginTop="80dp"/>
+        android:layout_marginTop="30dp"
+        android:textColor="#D77345C5"
+        android:text="article Title"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/associationNumTel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="80dp"
+        android:textColor="#E4009688"
+        android:text="12345678" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

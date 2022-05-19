@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-    android:allowBackup="true"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Lost&amp;Found"
         android:requestLegacyExternalStorage="true"
@@ -20,6 +20,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name="com.amier.Activities.activities.SplashScreen"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.amier.Activities.activities.Contribution"
             android:exported="false" />
@@ -52,7 +61,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-
         <activity
             android:name="com.amier.Activities.activities.selectTypeArticle"
             android:exported="false" />
@@ -73,13 +81,7 @@
             android:exported="true" />
         <activity
             android:name="com.amier.Activities.activities.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
 
         <service
             android:name="com.amier.Activities.api.MyFRireBaseMessagingServicee"

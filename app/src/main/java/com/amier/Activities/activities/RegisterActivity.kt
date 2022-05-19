@@ -146,12 +146,22 @@ private lateinit var fab: FloatingActionButton
                     response: Response<User>
                 ) {
                     if(response.isSuccessful){
+                        mSharedPref.edit().apply{
+                            putString("photoProfil", response.body()?.user?.photoProfil.toString())
+                            putString("_id", response.body()?.user?._id.toString())
+                            putString("nom", response.body()?.user?.nom.toString())
+                            putString("email", response.body()?.user?.email.toString())
+                            putString("numt", response.body()?.user?.numt.toString())
+                            putString("tokenfb", response.body()?.user?.tokenfb.toString())
+                            putString("prenom", response.body()?.user?.prenom.toString())
+                            //putBoolean("session", true)
+                        }.apply()
                         Log.i("signup good", response.body().toString())
                         var userSendbird = SendBirdUser()
                         userSendbird.nickname = response.body()?.user?.prenom.toString()
 
                         userSendbird.profile_url = response.body()?.user?.photoProfil.toString()
-                        userSendbird.user_id = response.body()?.user?._id.toString() +"/"+response.body()?.user?.tokenfb.toString()
+                        userSendbird.user_id = response.body()?.user?._id.toString()
                         Log.i("photo de profil sendbird : ", userSendbird.profile_url!!)
                         apiInterface.sendBirdCreate(userSendbird).enqueue(object:
                             Callback<SendBirdUser>{
@@ -159,6 +169,15 @@ private lateinit var fab: FloatingActionButton
                                 call: Call<SendBirdUser>,
                                 response: Response<SendBirdUser>
                             ) {
+
+                                val intent = Intent(applicationContext, HomeActivity::class.java)
+                                if(connectToSendBird(mSharedPref.getString("_id","")!!)){
+                                    Log.i("sendbird connecté :","")
+                                }else{
+                                    Log.i("sendbird moch connecté :","")
+                                }
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
                                 Log.i("server reponse sendbird good: ",response.body().toString())
                             }
                             override fun onFailure(call: Call<SendBirdUser>, t: Throwable) {
@@ -227,5 +246,20 @@ private lateinit var fab: FloatingActionButton
                     "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                     ")+"
         )
+
+        fun connectToSendBird(userID: String) :Boolean{
+            var a = false
+            SendBird.connect(userID) { user, e ->
+
+                if (e != null) {
+
+                    Log.i("erreur connecting sendbird : ",e.message)
+                }else{
+
+                    a = true
+                }
+            }
+            return  a
+        }
 
 }

@@ -57,6 +57,7 @@ class DetailUserArticle : AppCompatActivity(), UserArticleListAdapter.OnItemClic
 
 
         repondreButton.setOnClickListener {
+            println(userArticleid)
             usersSB.add(userArticleid)
             createChannel(usersSB)
         }
