@@ -37,7 +37,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="65dp"
             android:text="TextView"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="45dp" />
 
         <TextView
@@ -47,8 +47,7 @@
             android:layout_marginTop="240dp"
             android:gravity="center"
             android:text="TextView"
-            android:textSize="30dp"
-            />
+            android:textSize="30dp" />
     </androidx.cardview.widget.CardView>
 
     <Button
@@ -76,8 +75,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/login_btn_bg"
+            android:gravity="center"
             android:text="Les articles:"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="22dp" />
 
         <com.airbnb.lottie.LottieAnimationView

@@ -11,9 +11,9 @@
         android:id="@+id/mesarticlesE"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/login_btn_bg"
         android:gravity="center"
         android:padding="5dp"
-        android:background="@drawable/login_btn_bg"
         android:text="Mes contributions"
         android:textSize="25dp" />
 

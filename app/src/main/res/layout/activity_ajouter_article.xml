@@ -17,14 +17,16 @@
 
             <TextView
                 android:id="@+id/newpost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="276dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
+                android:background="@drawable/login_btn_bg"
+                android:gravity="center"
                 android:text="Ajouter nouveau article"
-                android:textColor="@color/black"
-                android:textSize="25dp"
+                android:textColor="@color/colorPrimary"
 
+                android:textSize="22dp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -188,7 +190,14 @@
                 android:layout_gravity="center"
                 android:background="@drawable/login_btn_bg"
                 android:paddingTop="25dp"
-                android:text="Question de securite (Optionnel)" />
+                android:text="Question de securite (Optionnel)"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="15dp"
+                android:layout_weight="1"
+                />
 
 
             <Button
@@ -196,10 +205,10 @@
                 android:layout_width="99dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/product_sans_regular"
-                android:text="Ajouter"
                 android:background="@drawable/button_rounded_green"
-                />
+                android:fontFamily="@font/product_sans_regular"
+                android:text="Ajouter "
+                android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
 
